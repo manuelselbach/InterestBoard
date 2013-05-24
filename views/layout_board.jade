@@ -1,0 +1,99 @@
+!!!5
+html
+	head
+		title InterestBoard: #{title}
+		link(rel='stylesheet', href='/components/bootstrap-stylus/stylus/bootstrap.css')
+		link(rel='stylesheet', href='/components/bootstrap-stylus/stylus/responsive.css')
+		link(rel='stylesheet', href='/stylesheets/home.css')
+		link(rel='stylesheet', href='/stylesheets/board.css')
+		script(src='http://static.ak.fbcdn.net/connect/en_US/core.js')
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		
+	body
+		.wrap
+			.navbar-wrapper
+				.container
+					.navbar.navbar-inverse
+						.navbar-inner
+							button.btn.btn-navbar(type="button", data-toggle="collapse",  data-target=".nav-collapse") 
+								span.icon-bar
+								span.icon-bar
+								span.icon-bar
+							a.brand(href="/") InterestBoard
+
+							.nav-collapse.collapse
+								// Site navigation
+								ul.nav
+									li.dropdown
+										a.dropdown-toggle(href="#", data-toggle="dropdown") #{__('add')}&nbsp;<b class="caret"></b>
+											ul.dropdown-menu
+												li
+													a(href="#newlink")	#{__('link')}
+												li
+													a(href="#newimage") #{__('image')}
+												li
+													a(href="#newtext") #{__('text')}
+												li.divider
+												li.nav-header Bulk import
+												li
+													a(href="#") #{__('rss')}
+							
+								// Navigation: User and Login 
+								- if(!everyauth.loggedIn)
+									ul.nav.pull-right
+										li
+											a(href="/auth/facebook") 
+												span.white #{__('login')}
+								- else
+									ul.nav.pull-right
+										li.dropdown
+											a.dropdown-toggle(href="#", data-toggle="dropdown") #{__('logged in as')}: 
+												strong.white #{everyauth.facebook.user.name}
+											ul.dropdown-menu
+												li 
+													a(href="/logout") #{__('logout')}
+												li.nav-header #{__('you')}
+												li 
+													a(href="/me") #{__('profile')}
+
+		#fb-root
+		#wrap
+			//  Begin page content
+			.container
+				.page-header
+					block header
+
+				p.lead
+					block lead
+
+				block content
+				
+			.push
+
+		#footer
+			.container
+				block footer
+					
+
+		// javascripts
+		script(src='/components/jquery/jquery.min.js')
+		script(src='/components/jquery-serializeObject/jquery.serializeObject.js')
+		script(src='/components/bootstrap-stylus/js/bootstrap-affix.js')
+		script(src='/components/bootstrap-stylus/js/bootstrap-transition.js')
+		script(src='/components/bootstrap-stylus/js/bootstrap-alert.js')
+		script(src='/components/bootstrap-stylus/js/bootstrap-modal.js')
+		script(src='/components/bootstrap-stylus/js/bootstrap-dropdown.js')
+		script(src='/components/bootstrap-stylus/js/bootstrap-scrollspy.js')
+		script(src='/components/bootstrap-stylus/js/bootstrap-tab.js')
+		script(src='/components/bootstrap-stylus/js/bootstrap-tooltip.js')
+		script(src='/components/bootstrap-stylus/js/bootstrap-popover.js')
+		script(src='/components/bootstrap-stylus/js/bootstrap-button.js')
+		script(src='/components/bootstrap-stylus/js/bootstrap-collapse.js')
+		script(src='/components/bootstrap-stylus/js/bootstrap-carousel.js')
+		script(src='/components/bootstrap-stylus/js/bootstrap-typeahead.js')
+		
+		script(src='/components/requirejs/require.js')
+		script(src='/components/underscore/underscore-min.js')
+		script(src='/components/backbone/backbone-min.js')
+		script(src='/javascripts/scripts.js')
+		script(src='/javascripts/board/boot.js')

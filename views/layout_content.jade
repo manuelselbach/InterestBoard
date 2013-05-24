@@ -1,0 +1,99 @@
+!!!5
+html
+	head
+		title #{title}
+		link(rel='stylesheet', href='/components/bootstrap-stylus/stylus/bootstrap.css')
+		link(rel='stylesheet', href='/components/bootstrap-stylus/stylus/responsive.css')
+		link(rel='stylesheet', href='/stylesheets/home.css')
+		script(src='http://static.ak.fbcdn.net/connect/en_US/core.js')
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+
+	body
+		.navbar-wrapper
+			.container
+				.navbar.navbar-inverse
+					.navbar-inner
+						button.btn.btn-navbar(type="button", data-toggle="collapse",  data-target=".nav-collapse") 
+							span.icon-bar
+							span.icon-bar
+							span.icon-bar
+						a.brand(href="/") InterestBoard
+
+						.nav-collapse.collapse
+							// Site navigation
+							ul.nav
+								li.active
+									a(href="/") #{__('about')}
+								li
+									a(href="#contact") XX
+								li.dropdown
+									a.dropdown-toggle(href="#", data-toggle="dropdown") Boards&nbsp;<b class="caret"></b>
+										ul.dropdown-menu
+											li
+												a(href="#")	Action
+											li
+												a(href="#") Another action
+											li
+												a(href="#") Something else here
+											li.divider
+											li.nav-header Nav header
+											li
+												a(href="#") Separated link
+											li
+												a(href="#") One more separated link
+							
+							// Navigation: User and Login 
+							- if(!everyauth.loggedIn)
+								ul.nav.pull-right
+									li
+										a(href="/auth/facebook") 
+											span.white Login
+							- else
+								ul.nav.pull-right
+									li.dropdown
+										a.dropdown-toggle(href="#", data-toggle="dropdown") #{__('logged in as')}: 
+											strong.white #{everyauth.facebook.user.name}
+										ul.dropdown-menu
+											li 
+												a(href="/logout") Logout
+											li.nav-header You
+											li 
+												a(href="/me") Show profile
+
+		.container
+			#header.page-header
+				block header
+				
+		#fb-root
+		
+		.container.marketing
+			.row
+				// *** MARKETING CONTENT
+				block content
+				
+			hr(class="featurette-divider")
+
+			footer
+				p.pull-right
+					a(href="#") Back to top
+				p
+					| © 2013 Company, Inc. · 
+					a(href="/about/privacy") Privacy
+					|&nbsp;·&nbsp; 
+					a(href="/about/terms") Terms
+
+		script(src='/components/jquery/jquery.min.js')
+		script(src='/components/bootstrap-stylus/js/bootstrap-affix.js')
+		script(src='/components/bootstrap-stylus/js/bootstrap-transition.js')
+		script(src='/components/bootstrap-stylus/js/bootstrap-alert.js')
+		script(src='/components/bootstrap-stylus/js/bootstrap-modal.js')
+		script(src='/components/bootstrap-stylus/js/bootstrap-dropdown.js')
+		script(src='/components/bootstrap-stylus/js/bootstrap-scrollspy.js')
+		script(src='/components/bootstrap-stylus/js/bootstrap-tab.js')
+		script(src='/components/bootstrap-stylus/js/bootstrap-tooltip.js')
+		script(src='/components/bootstrap-stylus/js/bootstrap-popover.js')
+		script(src='/components/bootstrap-stylus/js/bootstrap-button.js')
+		script(src='/components/bootstrap-stylus/js/bootstrap-collapse.js')
+		script(src='/components/bootstrap-stylus/js/bootstrap-carousel.js')
+		script(src='/components/bootstrap-stylus/js/bootstrap-typeahead.js')
+

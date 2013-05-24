@@ -1,0 +1,16 @@
+#
+# ignore this files in nodemon, because the browser refetch this files
+#
+
+# Javascripts
+/public/javascripts/*.js
+/public/components
+
+# CSS
+/public/stylesheets/*.css
+
+# Backbone-Templates
+/public/templates/*
+
+
+

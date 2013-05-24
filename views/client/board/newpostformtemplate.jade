@@ -1,0 +1,27 @@
+
+h1 
+	| <%= name %>
+
+ul#newposttabmenu(class="nav nav-tabs")
+	li
+		a(href="#select-link", data-toggle="tab") Link
+	li
+		a(href="#select-image", data-toggle="tab") Image
+	li
+		a(href="#select-text", data-toggle="tab") Text
+
+.tab-content
+	#select-link.tab-pane active
+	form
+		fieldset
+			legend Add a new webpage to the board
+			label 
+			input(name="url", type="text", style="width: 95%", placeholder="Insert a URL…") 
+			span(class="help-block") After adding the page it will appear on the board soon.
+
+	#select-image.tab-pane add Image 
+	#select-text.tab-pane add Text
+
+	.modal-footer
+		a.btn(href="#closemodal") Cancel
+		a.btn.btn-primary(href="#") Add Post

@@ -1,0 +1,61 @@
+/* 
+  Post styles
+*/
+
+$postWithSmall = 300px
+$postBackgroundOnHover = #E5E5E5
+$postBackgroundTitle = #989898
+$postBackgroundFooter = #655858
+
+
+#posts
+	.post
+		width: w = $postWithSmall
+		height: h = $postWithSmall
+		margin 10px
+		float left
+		h3
+			font-size 16px
+			font-family 'Quicksand'
+			font-weight bold
+			color black
+			overflow hidden
+			height 40px
+			display block
+			background-color $postBackgroundTitle
+			position relative
+			top 0px
+			padding-left 10px
+			margin 0px
+			img
+				width (w)
+				margin 0px
+		div.inner
+			border-top 1px solid darkgrey 
+			display none
+			p
+				max-width (w)
+				max-height 240px
+				min-height 240px
+				overflow hidden
+				top -(225px)
+				position relative
+				background-color $postBackgroundOnHover
+				padding-left 5px
+				padding-right 5px
+				margin 0px
+				font-size 12px
+				font-family 'Quicksand'
+			div.postcontrol
+				max-height 30px
+				min-height 30px
+				background-color $postBackgroundFooter
+				padding-left 5px
+				padding-top 4px
+				position relative
+				color white
+				top -(230px)
+				i
+					margin-right 5px;
+			
+			

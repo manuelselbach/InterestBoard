@@ -1,0 +1,46 @@
+/* 
+  Roaster styles
+*/
+
+$shadowcolor = #000000
+$sc_shadow = 3px 3px 5px $shadowcolor
+
+#roaster
+	height 83px
+	position relative
+	margin-top -38px
+	overflow-x scroll
+	overflow-y hidden
+	white-space: nowrap;
+	#roaster_scroller
+		position absolute
+		scrollbar-base-color green
+	ul
+		list-style-type none
+	li.chathead
+		float left
+		margin-right 15px
+		min-width: 130px
+		align center
+		img
+			width 50px
+			height 50px
+			border-radius 25px
+			display block
+			clear both
+			-webkit-box-shadow $sc_shadow
+			-moz-box-shadow $sc_shadow
+			box-shadow $sc_shadow
+			align center
+			margin-left auto
+			margin-right auto
+			opacity 0.8
+			
+		.name
+			display block
+			margin-top 3px
+			text-align center
+			margin-left auto
+			margin-right auto
+			
+			

@@ -1,0 +1,14 @@
+
+.post
+	h3 <%= get('title') %>
+	| <img src="/image/<%= get('img') %>" />
+	.inner
+		p 
+			| <%= get('text') %>
+		.postcontrol
+			a(href="#", title="remove")
+				i.icon-white.icon-remove 
+			i.icon-white.icon-thumbs-up 
+			i.icon-white.icon-thumbs-down
+			i.icon-white.icon-arrow-right 
+			

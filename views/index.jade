@@ -1,0 +1,113 @@
+extend layout_home
+
+// **************************************************************************************
+// *** CAROUSEL CONTENT
+// **************************************************************************************
+block carousel
+	.item.active
+		img(src="https://s3.amazonaws.com/jetstrap-site/images/2.0/assets/cta_image1.jpg")
+		.container
+			.carousel-caption
+				h1 InterestBoard
+				p.lead #{__('Public live brainstorm with your buddies')}
+				| <a class="btn btn-large btn-primary" href="#">Start a new board</a>
+
+	.item
+		img(src="https://s3.amazonaws.com/jetstrap-site/images/2.0/assets/cta_image2.jpg")
+		.container
+			.carousel-caption
+				h1 Collect links related to your topics
+				p.lead 
+					| Cras justo odio, dapibus ac facilisis in, egestas eget 
+					| quam. Donec id elit non mi porta gravida at eget metus. 
+					| Nullam id dolor id nibh ultricies vehicula ut id elit
+				| <a class="btn btn-large btn-primary" href="#">Learn more</a>
+
+	.item
+		img(src="https://s3.amazonaws.com/jetstrap-site/images/2.0/assets/cta_image3.jpg")
+		.container
+			.carousel-caption
+				h1 One more for good measure
+				p.lead 
+					| Cras justo odio, dapibus ac facilisis in, egestas eget 
+					| quam. Donec id elit non mi porta gravida at eget metus. 
+					| Nullam id dolor id nibh ultricies vehicula ut id elit.
+				| <a class="btn btn-large btn-primary" href="#">Browse gallery</a>
+
+// **************************************************************************************
+// *** MARKETING CONTENT
+// **************************************************************************************
+block marketing
+	.span4
+		img(class="img-circle", data-src="holder.js/140x140")
+		h2 Heading
+		p
+			| Donec sed odio dui. Etiam porta sem malesuada magna mollis 
+			| euismod. Nullam id dolor id nibh ultricies vehicula ut id elit. 
+			| Morbi leo risus, porta ac consectetur ac, vestibulum at eros. 
+			| Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
+		p
+			a.btn(href="#") View this details »
+
+	.span4
+		img(class="img-circle", data-src="holder.js/140x140")
+		h2 Heading
+		p
+			| Duis mollis, est non commodo luctus, nisi erat porttitor ligula, 
+			| eget lacinia odio sem nec elit. Cras mattis consectetur purus 
+			| sit amet fermentum. Fusce dapibus, tellus ac cursus commodo, 
+			| tortor mauris condimentum nibh, ut fermentum massa justo sit 
+			| amet risus.
+		p
+			a.btn(href="#") View this details »
+
+	.span4
+		img(class="img-circle", data-src="holder.js/140x140")
+		h2 Heading
+		p
+			| Donec sed odio dui. Cras justo odio, dapibus ac facilisis in,
+			| egestas eget quam. Vestibulum id ligula porta felis euismod 
+			| semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris
+			| condimentum nibh, ut fermentum massa justo sit amet risus.
+		p
+			a.btn(href="#") View this details »
+
+// **************************************************************************************
+// *** FEATURETTE CONTENT
+// **************************************************************************************
+block featurette
+	.featurette
+		img(class="featurette-image pull-right", src="http://twitter.github.com/bootstrap/assets/img/examples/browser-icon-chrome.png")
+		h2.featurette-heading
+			| First featurette headling. <span class="muted">It'll blow your mind.</span>
+		p.lead
+			| Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id 
+			| ligula porta felis euismod semper. Praesent commodo cursus magna, 
+			| vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus
+			| commodo.
+
+	hr(class="featurette-divider")
+
+	.featurette
+		img(class="featurette-image pull-left", src="http://twitter.github.com/bootstrap/assets/img/examples/browser-icon-firefox.png")
+		h2.featurette-heading
+			| Oh yeah, it's that good. <span class="muted">See for yourself.</span>
+		p.lead
+			| Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id 
+			| ligula porta felis euismod semper. Praesent commodo cursus magna,
+			| vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus
+			| commodo.
+
+	hr(class="featurette-divider")
+
+	.featurette
+		.img(class="featurette-image pull-right", src="http://twitter.github.com/bootstrap/assets/img/examples/browser-icon-safari.png")
+		h2.featurette-heading
+			| And lastly, this one. <span class="muted">Checkmate.</span>
+		p.lead
+			| Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id 
+			| ligula porta felis euismod semper. Praesent commodo cursus magna,
+			| vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus
+			| commodo.
+
+	hr(class="featurette-divider")
