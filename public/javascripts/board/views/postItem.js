@@ -56,6 +56,7 @@ define(['models/Post', 'text!templates/PostItem.html'],
 		    		//alert("enable button remove");
 		    		this.$el.find('#removepost').show();
 		    		// this.$el.find('#removepost').attr('href', "#remove/item/"+ this.model.get('_id'));
+		    		this.$el.find('#removepost').unbind();
 					this.$el.find('#removepost').bind('click', function(){
 						if(location.pathname.indexOf('/board') == 0){
 							var url = location.pathname +'/post?id='+ that.model.get('_id');

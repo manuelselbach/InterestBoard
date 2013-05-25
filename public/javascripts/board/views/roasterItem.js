@@ -47,6 +47,7 @@ define(['models/User', 'text!templates/roasterItem.html'],
 			// on selection
 		    selectItem: function selectItem() {
 		    	console.log('Select views/roasterItem: '+ this.model.get('name'));
+		    	console.log( this.model );
 		    },
 					    
 		    // animate the chathead on moseover

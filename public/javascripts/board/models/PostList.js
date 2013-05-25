@@ -1,5 +1,5 @@
-define(['Backbone', 'models/Post'], 
-	function(backbone, Post) {
+define(['Backbone', 'Underscore', 'models/Post'], 
+	function(backbone, u, Post) {
 	
 		/**
 		 * List of Users
@@ -33,6 +33,7 @@ define(['Backbone', 'models/Post'],
     		initialize: function initialize(){
     			console.log("PostList init");
     		},
+    		
     		
 		});
 

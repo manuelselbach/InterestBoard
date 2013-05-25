@@ -6,7 +6,7 @@ define(['Backbone', 'BackboneSchema'], function(backbone, backboneschema, requir
 	var Post = backboneschema.extend({
 		
 		schema: {
-			_id: { type: String }
+			_id: { }
 			, url: { type: String }
 			, img: { type: String  }
 			, text: { type: String }

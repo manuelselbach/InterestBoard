@@ -37,13 +37,13 @@ define(	['Sockets', 'models/PostList', 'views/postItem'],
 					});
 					
 					// user left the board
-					socket.on('pinnwall::removePost', function(name, data){
-						console.log('Post is removed from board: '+ data.name);
+					socket.on('pinnwall::removePost', function(data){
+						console.log('Post is removed from board: '+ data);
 
-						// remove the user from the collecten, 
+						// remove the post from the collecten, 
 						// the view event will remove the user from the screen
 						self.model.remove(
-							self.model.get( data._id )
+							self.model.findWhere({'_id': data})
 						);
 					});
 					

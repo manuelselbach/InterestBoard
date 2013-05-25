@@ -75,11 +75,13 @@ module.exports = function(app, models) {
      			callback(user.fid);
 			});
 			
-			app.eventEmitter.on('post::removed', function(postid){
-				console.log("Send event to all registed users to remove a post.");
-				sio.sockets.in(session.board).emit('pinnwall::removePost', postid);
-			});
-			
+			// app.eventEmitter.once('post::removed', function(board, postid){
+// 				console.log("Send event to all registed users to remove a post "+ postid 
+// 				+" to boardmembers of "+ board.boardname);
+// 				
+// 				sio.sockets.in(board.boardname).emit('pinnwall::removePost', postid);
+// 			});
+// 			
 			socket.on('disconnect', function(){
 				if ('development' == app.get('env')) console.log('SIO disconnect');
 				models.Board.removeUserFromBoard(session.board, user, function onRemoveUserDone(){
@@ -89,6 +91,15 @@ module.exports = function(app, models) {
 				
 			});
 		});
+		
+		app.eventEmitter.once('post::removed', function(board, postid){
+			console.log("Send event to all registed users to remove a post "+ postid 
+			+" to boardmembers of "+ board.boardname);
+				
+			sio.sockets.in(board.boardname).emit('pinnwall::removePost', postid);
+		});
+			
+		
 	});
 	
 };

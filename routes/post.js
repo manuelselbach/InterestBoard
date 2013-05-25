@@ -62,7 +62,7 @@ module.exports = function(app, models, modules) {
 	app.delete('/board/:board/post', function (req, res){
 		var boardname = String(req.params.board).slugify();
 		var postid = req.query["id"];
-		console.log("DELETE POST AND SEND EVENT "+ postid);
+		if ('development' == app.get('env')) console.log("Delete post "+ postid + " from board "+ boardname);
 		models.Board.findByName(boardname, function(board){
 			models.Board.removePost(board, postid, function(err){
 				res.contentType('application/json');
@@ -70,7 +70,7 @@ module.exports = function(app, models, modules) {
 					res.send(500);	
 				} else {
 					res.send(200);
-					app.eventEmitter.emit('post::removed', postid);
+					app.eventEmitter.emit('post::removed', board, postid);
 				}
 			});
 		});

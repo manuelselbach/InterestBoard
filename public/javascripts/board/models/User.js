@@ -9,13 +9,13 @@ define(['Backbone', 'BackboneSchema'], function(backbone, backboneschema, requir
 		defaults: function() {
 			return {
 				name: "",
-				id: 0,
+				sid: 0,
 				img: '/images/blank.png'
 			};
 		},
   		
   		validate: function(attrs, options){
-  		var errors = [];
+  			var errors = [];
 			
 			if(!attrs) {attrs = this.attributes};
 			if (!attrs.name || attrs.name == '') {
