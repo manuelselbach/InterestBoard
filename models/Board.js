@@ -96,6 +96,9 @@ module.exports = function(app, mongoose) {
 	// return this.name.first + ' ' + this.name.last;
 	// });
 
+	/**
+	 * Find boards by regular expressen on its name, title or tagline
+	 */
 	var findByString = function(searchStr, callback) {
 		var searchRegex = new RegExp(searchStr, 'i');
 		Board.find({
@@ -107,18 +110,27 @@ module.exports = function(app, mongoose) {
 		}, callback);
 	};
 
+	/**
+	 * Get a board by its id
+	 */
 	var findById = function(boardId, callback) {
 		Board.findOne({_id:boardId}, function(err,doc) {
 			callback(doc);
 		});
 	};
 
+	/**
+	 * Get a board by name
+	 */
 	var findByName = function(boardName, callback) {
 		Board.findOne({boardname:boardName}, function(err,doc) {
 			callback(doc);
 		});
 	};
 
+	/**
+	 * Create a new board
+	 */
 	var create = function(bname, title, createCallback) {
 		if ('development' == app.get('env')) console.log('Create board ' + bname);
 		var board = new Board({
@@ -155,7 +167,12 @@ module.exports = function(app, mongoose) {
 				}
 		});
 	};
-  
+
+	/**
+	 * Removes a user object from the board by boardname
+	 *
+	 * If a user left the board, it should ungegisterd from the roaster.
+	 */
 	var removeUserFromBoard = function(bname, user, callback){
 		if ('development' == app.get('env')) console.log("Remove "+ bname +","+ user.sid );
 		Board.update(
@@ -165,6 +182,11 @@ module.exports = function(app, mongoose) {
 		);
 	};
 	
+	/**
+	 * This function removes all active users from all boards.
+	 *
+	 * Call this at application startup to clear the pending users
+	 */
 	var removeAllActiveUsersFromAllBoards = function(callback){
 		if ('development' == app.get('env')) console.log("Remove all users from all boards" );
 		Board.update(
@@ -175,6 +197,9 @@ module.exports = function(app, mongoose) {
 		);
 	};
 	
+	/**
+	 * Add a new post object to the board by boardname
+	 */
 	var addPost = function(board, post, callback){
 		if ('development' == app.get('env')) {
 			console.log("# Add post");
@@ -187,6 +212,24 @@ module.exports = function(app, mongoose) {
 		});	
 	};
 	
+	/**
+	 * Add a new post object to the board
+	 */
+	var removePost = function(board, postid, callback){
+		if ('development' == app.get('env')) {
+			console.log("# Remove post");
+			console.log(board.title +", "+ postid);
+		}
+		board.posts.pull(postid);
+		board.save(function onSave(err, board){
+			callback(err);
+			
+		});	
+	};
+	
+	/**
+	 * Return the posts in opposite order
+	 */
 	var findSortedPostsByBoardName = function(boardname, callback){
 		Board.aggregate(
 			{ $match: { boardname: boardname }}
@@ -232,6 +275,7 @@ module.exports = function(app, mongoose) {
     	create: create,
 	    addUserToBoard: addUserToBoard,
 	    addPost: addPost,
+	    removePost: removePost,
 		removeUserFromBoard: removeUserFromBoard,
 		removeAllActiveUsersFromAllBoards: removeAllActiveUsersFromAllBoards,
 		findSortedPostsByBoardName: findSortedPostsByBoardName,

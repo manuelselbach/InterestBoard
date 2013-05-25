@@ -51,10 +51,35 @@ define(['models/Post', 'text!templates/PostItem.html'],
 					    
 		    // animate the chathead on moseover
 		    hoverInItem: function hoverInItem() {
+		    	var that = this;
 		    	if( this.model.isRemovable ){
-		    		alert("enable button remove");
+		    		//alert("enable button remove");
+		    		this.$el.find('#removepost').show();
+		    		// this.$el.find('#removepost').attr('href', "#remove/item/"+ this.model.get('_id'));
+					this.$el.find('#removepost').bind('click', function(){
+						if(location.pathname.indexOf('/board') == 0){
+							var url = location.pathname +'/post?id='+ that.model.get('_id');
+							$.ajax({
+								url: url,
+								contentType: 'application/json',
+								dataType: 'text',
+								error: function( xhr, status, err){
+									alert("An error occured: "+ status +", "+ err);
+								},
+								succsess: function( data, status, xhr ){
+									alert("OK");
+								},
+								type: 'DELETE',
+							
+							});
+	
+						} else {
+							alert("You have to seect a board.");
+						}
+					});
+		    		
 		    	} else {
-		    		alert("disable button remove");
+		    		this.$el.find('#removepost').hide();
 		    	}
 		    	this.$el.find('div.inner').fadeIn(300);
 		    },

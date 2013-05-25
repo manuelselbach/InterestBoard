@@ -6,7 +6,8 @@ define(['Backbone', 'BackboneSchema'], function(backbone, backboneschema, requir
 	var Post = backboneschema.extend({
 		
 		schema: {
-			url: { type: String }
+			_id: { type: String }
+			, url: { type: String }
 			, img: { type: String  }
 			, text: { type: String }
 			, title: { type: String }
@@ -25,6 +26,7 @@ define(['Backbone', 'BackboneSchema'], function(backbone, backboneschema, requir
 		// Default schema insure that a new user will have all necessary attributes
 		defaults: function() {
 			return {
+				_id: 0,
 				url: '',
 				img: '',
 				text: '',
@@ -34,7 +36,8 @@ define(['Backbone', 'BackboneSchema'], function(backbone, backboneschema, requir
 		
 		eql: function(other) {
 			console.log( this.get('url') +" == "+ other.get('url'));
-    		return this.get('url') == other.get('url');
+    		return this.get('url') == other.get('url') &&
+    			this._id == other.get('_id');
  		},
 		
 		validate: function (attrs, options) {
@@ -56,7 +59,6 @@ define(['Backbone', 'BackboneSchema'], function(backbone, backboneschema, requir
 		},
 		
 		initialize: function(){
-
 		}
   		
   		
