@@ -20,7 +20,7 @@ define(['QUnit', 'models/User'], function(qunit, User){
 		test( "Create an empty user.", function(){
     		var user = new User();
     		equal( user.get("name"), "" );
-    		equal( user.get("id"), 0 );
+    		equal( user.get("id"), undefined );
     		equal( user.get("img"), "/images/blank.png" );
     		equal( user.get("notdefined"), undefined );
     		ok( user.validate().indexOf('A user without an name is not possible.'));
