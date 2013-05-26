@@ -13,6 +13,7 @@ require.config({
     text: 				'/components/requirejs-text/text',
     i18n:				'/components/requirejs-i18n/i18n',
     templates: 			'/templates/board',
+    globaltemplates:	'/templates',
     Router:				'/javascripts/board/router',
 	Roaster: 			'/javascripts/board/Roaster',
 	Posts: 				'/javascripts/board/Posts',

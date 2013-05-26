@@ -1,5 +1,5 @@
-define(	['Sockets', 'ModalView', 'models/Post', 'text!templates/newpostformtemplate.html'],
-	function(Sockets, ModalView, Post, NewPostFormTemplate) {
+define(	['Sockets', 'ModalView', 'models/Post', 'text!templates/newpostformtemplate.html', 'text!globaltemplates/alert.html'],
+	function(Sockets, ModalView, Post, NewPostFormTemplate, AlertTemplate) {
 
 		/**
 		 * The roaster is the frame where the current online users will be palced.
@@ -46,7 +46,14 @@ define(	['Sockets', 'ModalView', 'models/Post', 'text!templates/newpostformtempl
 				
 				console.log(this.model);
 				if (this.model.isValid()) {
-					$('#messages').append('<div class="alert alert-success">Erscheint gleich.</div>');
+					$('#notices .container').html(
+						_.template(
+		        			AlertTemplate, 
+		        			{headline: 'Saved',
+		        			content: 'Your post will be saved and appears in a couple of seconds.'}
+			        	)
+					);
+					$('#notices .container #notice').addClass('alert-success').fadeIn(300).delay(3200).fadeOut(600);;
 					this.hideModal();
 				}
 			}
