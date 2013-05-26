@@ -1,5 +1,5 @@
-define(	['Sockets', 'models/PostList', 'views/postItem'],
-	function(Sockets, PostList, PostItemView) {
+define(	['Sockets', 'models/PostList', 'models/Post', 'views/postItem'],
+	function(Sockets, PostList, Post, PostItemView) {
 
 		/**
 		 * The roaster is the frame where the current online users will be palced.
@@ -45,6 +45,19 @@ define(	['Sockets', 'models/PostList', 'views/postItem'],
 						self.model.remove(
 							self.model.findWhere({'_id': data})
 						);
+					});
+					
+					socket.on('pinnwall::insertPost', function(data){
+						console.log('New Post arrived to the board:');
+						var post = new Post(data);
+						// add the post to the collecten, 
+						// the view event will add the post to the screen
+						var view = new PostItemView({
+      						model: post
+						});
+						view.render();
+					    that.$el.prepend(view.$el);
+
 					});
 					
 					socket.emit('my::id', function(data){

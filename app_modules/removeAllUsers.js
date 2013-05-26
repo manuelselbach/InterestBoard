@@ -7,7 +7,14 @@ module.exports = function(app, models) {
 		//if ('development' == app.get('env')) 
 		console.log("Clear all users from all boards");
 		if(models.Board){
-			models.Board.removeAllActiveUsersFromAllBoards();
+			models.Board.removeAllActiveUsersFromAllBoards(function(err){
+			if(err){
+				console.log("Can not remove all users...");
+				console.log(err);
+			}
+			});
+		} else {
+			console.log("There is no board model from which users could remove.");
 		}
 	}
 	

@@ -24,11 +24,7 @@ module.exports = function(app, models, modules) {
 			} );
 			
 		readstream.on('error', function (err) {
-			console.log("Ey, some error.", err);
-			// todo
-			// find post
-			// delete image
-			// rerender
+			console.log("Can't get the image '"+  req.params.identifier +"' from the storage.", err);
 		});
 		
 		readstream.pipe(res);

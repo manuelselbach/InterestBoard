@@ -98,7 +98,13 @@ module.exports = function(app, models) {
 				
 			sio.sockets.in(board.boardname).emit('pinnwall::removePost', postid);
 		});
-			
+		
+		app.eventEmitter.once('post::inserted', function(board, post){
+			console.log("Send event to all registed users to add a post "+ post._id 
+			+" to boardmembers of "+ board.boardname);
+				
+			sio.sockets.in(board.boardname).emit('pinnwall::insertPost', post);
+		});
 		
 	});
 	

@@ -40,16 +40,23 @@ module.exports = function(app, models, modules) {
 		};
 
 		// Call rendering engine, than insert the post
-		models.Board.findByName(boardname, function renderAndInsert(board){
-			
-			app.eventEmitter.emit('post::shouldRender', post, function insertPost(post){
+		models.Board.findByName(boardname, function renderAndInsert(board){			
+			app.eventEmitter.emit('post::shouldRender', post, function insertPost(err, post){
+				if(err){
+					console.log("There is a problem with the render function.")
+					console.log(err);
+					res.send(500);
+				}
 				models.Board.addPost(board, post, function(err){
 					if(err){
 						console.log("There is a problem inserting the post.");
 						console.log(post);
 						console.log("To Board:");
 						console.log(board);
+						res.send(500);
+						return;
 					}
+					app.eventEmitter.emit('post::inserted', board, post)
 				});			
 			});
 		});

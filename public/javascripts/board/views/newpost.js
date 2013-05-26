@@ -44,9 +44,9 @@ define(	['Sockets', 'ModalView', 'models/Post', 'text!templates/newpostformtempl
 				console.log("Save...");
 				this.model.save();
 				
-				console.log("is Valid?...");
 				console.log(this.model);
 				if (this.model.isValid()) {
+					$('#messages').append('<div class="alert alert-success">Erscheint gleich.</div>');
 					this.hideModal();
 				}
 			}

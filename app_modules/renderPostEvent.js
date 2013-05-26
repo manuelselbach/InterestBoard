@@ -25,9 +25,9 @@
 		request({
 			uri: post.url,
 		}, function(error, response, body) {
+			console.log("Get Website for: "+ post.url);
 			pageExtrator = new extrator();
 			pageExtrator.extract(body, function( err, data ){
-				
 				if(err){
 					console.log("There is an error extraction the page from content: "+ post.url );
 					return;
@@ -45,6 +45,7 @@
 				// Screenshot
 				if(post.img == undefined || post.img == ''){
 					var md5sum = crypto.createHash('md5').update(post.url).digest("hex");
+					post.img = md5sum;
 					webshot(post.url, function(err, renderStream) {
 						var writestream = app.gridfs.createWriteStream({
     						filename: md5sum,
@@ -56,13 +57,27 @@
 							}
 						});
 						renderStream.pipe(writestream);
-					});
-					post.img = md5sum;
+						writestream.on('close', function (file) {
+							// do something with `file`
+							console.log("File is ready: "+ file.filename);
+							
+							post.rendered = true;
+							console.log("call callback");
+							callback(undefined, post);		
+
+						});
+
+						renderStream.on('end', function(){
+							// get back.
+						});
+					});	
+				} 
+				
+				// if img is set... 
+				else {
+					callback("Method not implemented, yet", post);
 				}
 				
-				// get back.
-				post.rendered = true;
-				callback(post);
 			});
 		});
 	};
