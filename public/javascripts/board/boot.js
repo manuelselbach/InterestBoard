@@ -7,7 +7,10 @@
 
 require.config({
   paths: {
-    Sockets: 			'/socket.io/socket.io',
+	JQuery:				'../components/jquery/jquery',
+  	SingletonAbstract:	'/javascripts/Singleton',
+    Socket: 			'/socket.io/socket.io',
+    SocketImpl:			'/javascripts/SocketImpl',
     models: 			'/javascripts/board/models',
     views:				'/javascripts/board/views',
     text: 				'/components/requirejs-text/text',
@@ -26,7 +29,9 @@ require.config({
   shim: {
     'ModalView': 		['Backbone', 'Validation'],
     'Backbone':			['Underscore'],
-    'Posts':			['Backbone', 'BackboneSchema']
+    'Posts':			['Backbone', 'BackboneSchema'],
+    'SingletonAbstract':['JQuery'],
+    'SocketImpl':		['SingletonAbstract', 'Socket']
   }
 });
 

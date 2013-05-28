@@ -1,5 +1,5 @@
-define(	['Sockets', 'models/PostList', 'models/Post', 'views/postItem'],
-	function(Sockets, PostList, Post, PostItemView) {
+define(	['SocketImpl', 'models/PostList', 'models/Post', 'views/postItem'],
+	function(SocketImpl, PostList, Post, PostItemView) {
 
 		/**
 		 * The roaster is the frame where the current online users will be palced.
@@ -16,7 +16,7 @@ define(	['Sockets', 'models/PostList', 'models/Post', 'views/postItem'],
 
 			},
     
-			// Initialize the roaster and connect the roaster to the sockets.
+			// Initialize the roaster and connect the roaster to the Socket.
 			initialize: function initialize() {
 				var self = this;
 				
@@ -25,19 +25,17 @@ define(	['Sockets', 'models/PostList', 'models/Post', 'views/postItem'],
 						self.render();
 					}}
 				).complete(function(){
-					socket = io.connect();
-					socket.on('connect', function(){
-						console.log("Pinwall is connected to sockets.");
-					});
+					
+					soc = new SocketImpl();
 				
 					// new post arrive
-					socket.on('pinnwall::addPost', function(name, data){
+					soc.socket.on('pinnwall::addPost', function(name, data){
 						console.log('New post is added: '+ data.name);
 						
 					});
 					
 					// user left the board
-					socket.on('pinnwall::removePost', function(data){
+					soc.socket.on('pinnwall::removePost', function(data){
 						console.log('Post is removed from board: '+ data);
 
 						// remove the post from the collecten, 
@@ -47,7 +45,7 @@ define(	['Sockets', 'models/PostList', 'models/Post', 'views/postItem'],
 						);
 					});
 					
-					socket.on('pinnwall::insertPost', function(data){
+					soc.socket.on('pinnwall::insertPost', function(data){
 						console.log('New Post arrived to the board:');
 						var post = new Post(data);
 						// add the post to the collecten, 
@@ -60,7 +58,7 @@ define(	['Sockets', 'models/PostList', 'models/Post', 'views/postItem'],
 
 					});
 					
-					socket.emit('my::id', function(data){
+					soc.socket.emit('my::id', function(data){
 						console.log("my id: "+ data);	
 						self.userid = data;
 						self.model.each(function(post, i) {

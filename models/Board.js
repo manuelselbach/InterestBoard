@@ -177,7 +177,7 @@ module.exports = function(app, mongoose) {
 		if ('development' == app.get('env')) console.log("Remove "+ bname +","+ user.sid );
 		Board.update(
 			{ boardname: bname }, 
-			{ '$pull': { currentusers: { sid: user.sid } } }
+			{ '$pull': { currentusers: { fid: user.fid } } }
 			, callback
 		);
 	};

@@ -9,7 +9,7 @@ define(['Backbone', 'BackboneSchema'], function(backbone, backboneschema, requir
 		defaults: function() {
 			return {
 				name: "",
-				sid: 0,
+				id: undefined,
 				img: '/images/blank.png'
 			};
 		},

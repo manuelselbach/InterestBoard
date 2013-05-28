@@ -22,7 +22,7 @@ define(['Backbone', 'Underscore', 'models/Post'],
 					var isDupe = this.findWhere( {url: newPost.url} ) 
 					if(isDupe){
 				    	console.log( isDupe.get('url') );
-				    	alert('increase the counter');
+				    	//alert('increase the counter');
 				    } else {
 						Backbone.Collection.prototype.add.call(this, newPost);				    
 				    }

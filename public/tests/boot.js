@@ -18,6 +18,10 @@ require.config({
 	Validation: 		'../components/backbone-validation/dist/backbone-validation-min',
 	ModalView:			'../components/backbone-jsmodalview/Backbone.ModalDialog',
 	BackboneSchema:		'../components/backbone-schema/backbone-schema',
+	SingletonAbstract:	'../javascripts/Singleton',
+	SocketImpl:			'../javascripts/SocketImpl',
+	Socket: 			'/socket.io/socket.io',
+	JQuery:				'../components/jquery/jquery',
 	QUnit:				'../components/qunit/qunit',
 	sinon:				'../components/sinon/lib/sinon',
 	QSinon:				'../components/sinon-qunit/pkg/sinon-qunit-1.0.0',
@@ -28,14 +32,15 @@ require.config({
     'QSinon':			['QUnit', 'sinon'],
     'models':			['Backbone'],
     'Backbone':			['Underscore'],
-    'Posts':			['Backbone', 'BackboneSchema']
+    'Posts':			['Backbone', 'BackboneSchema'],
+    'SocketImpl':		['SingletonAbstract', 'Socket']
   }
 });
 
-require(['QUnit', 'cases/require',  'cases/postModelTest', 'cases/postListModelTest',
-	'cases/userModelTest'], 
-	function(qunit, Requiretest, PostModelTest, PostListModelTest,
-		UserModelTest) {
+require(['JQuery', 'QUnit', 'cases/require',  'cases/postModelTest', 'cases/postListModelTest',
+	'cases/userModelTest', 'cases/singeltonTest', 'cases/socketImplTest'], 
+	function(jquery, qunit, Requiretest, PostModelTest, PostListModelTest,
+		UserModelTest, SingeltonTest, SocketImplTest) {
 
 		$(function() {
 			QUnit.config.autostart = false;
@@ -53,6 +58,8 @@ require(['QUnit', 'cases/require',  'cases/postModelTest', 'cases/postListModelT
 			PostModelTest.run();
 			PostListModelTest.run();
 			UserModelTest.run();
+			SingeltonTest.run();
+			SocketImplTest.run();
 			
 			console.log("Done.");	
 			QUnit.start();

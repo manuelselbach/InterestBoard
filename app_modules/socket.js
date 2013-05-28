@@ -35,10 +35,16 @@ module.exports = function(app, models) {
 		sio.sockets.on('connection', function (socket) {
 			if ('development' == app.get('env')) console.log( socket );
      		var session = socket.handshake.session;
-     		console.log(session);
+     		
+     		if(session.user == undefined){
+     			if ('development' == app.get('env')) console.log("User is unkonwn!");
+				socket.emit('Not authenticated!');
+				return;
+     		}
+     		
 			if ('development' == app.get('env')) console.log("Join sockeet to board: "+ session.board);
 			socket.join(session.board);
-
+			
 			if( session.user.location == undefined ){
 				session.user.location = {
 					id: 0,
@@ -64,7 +70,9 @@ module.exports = function(app, models) {
 			
 			models.Board.addUserToBoard(session.board, user, function onAddUserDone(){
 				// Tell everyone that i am arived!
-				sio.sockets.in(session.board).emit('roaster::addUser', user.sid, user);	
+				var suser = user;
+				suser.sid = undefined;
+				sio.sockets.in(session.board).emit('roaster::addUser', user.fid, suser);	
 	  		});
 			
 			socket.on('initialboardmember', function(data){
@@ -75,25 +83,20 @@ module.exports = function(app, models) {
      			callback(user.fid);
 			});
 			
-			// app.eventEmitter.once('post::removed', function(board, postid){
-// 				console.log("Send event to all registed users to remove a post "+ postid 
-// 				+" to boardmembers of "+ board.boardname);
-// 				
-// 				sio.sockets.in(board.boardname).emit('pinnwall::removePost', postid);
-// 			});
-// 			
 			socket.on('disconnect', function(){
 				if ('development' == app.get('env')) console.log('SIO disconnect');
 				models.Board.removeUserFromBoard(session.board, user, function onRemoveUserDone(){
 				// Tell everyone that i am left!
-				sio.sockets.in(session.board).emit('roaster::removeUser', user.sid, user);	
+				var suser = user;
+				suser.sid = undefined;
+				sio.sockets.in(session.board).emit('roaster::removeUser', user.fid, suser);	
 	  		});
 				
 			});
 		});
 		
 		app.eventEmitter.once('post::removed', function(board, postid){
-			console.log("Send event to all registed users to remove a post "+ postid 
+			console.log("Send remove event to all registed users to remove a post "+ postid 
 			+" to boardmembers of "+ board.boardname);
 				
 			sio.sockets.in(board.boardname).emit('pinnwall::removePost', postid);

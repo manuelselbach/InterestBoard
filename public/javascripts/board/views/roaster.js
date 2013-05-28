@@ -1,5 +1,5 @@
-define(	['Underscore', 'Sockets', 'models/User', 'models/UserList', 'views/roasterItem', 'text!templates/roaster.html', 'text!templates/roasterItem.html'],
-	function(u, Sockets, User, UserList, RoasterItemView, RoasterTemplate, RoasterItemTemplate) {
+define(	['Underscore', 'SocketImpl', 'models/User', 'models/UserList', 'views/roasterItem', 'text!templates/roaster.html', 'text!templates/roasterItem.html'],
+	function(u, SocketImpl, User, UserList, RoasterItemView, RoasterTemplate, RoasterItemTemplate) {
 
 		/**
 		 * The roaster is the frame where the current online users will be palced.
@@ -25,18 +25,15 @@ define(	['Underscore', 'Sockets', 'models/User', 'models/UserList', 'views/roast
 					}
 				}).complete(function(){
 					
-					socket = io.connect();
-					socket.on('connect', function(){
-						console.log("Roaster is connected to sockets.");
-					});
+					soc = new SocketImpl();
 				
 					// new user arrive
-					socket.on('roaster::addUser', function(name, data){
+					soc.socket.on('roaster::addUser', function(name, data){
 						console.log('New user is online: '+ data.name);
 						
 						// create the user object					
 						newuser = new User({
-							id: data.sid,
+							id: data.fid,
 							name: data.name, 
 							img: data.img
 						});
@@ -51,13 +48,13 @@ define(	['Underscore', 'Sockets', 'models/User', 'models/UserList', 'views/roast
 					});
 					
 					// user left the board
-					socket.on('roaster::removeUser', function(name, data){
-						console.log('User left this board: '+ data.name +" ("+ data.sid +")");
-						
+					soc.socket.on('roaster::removeUser', function(name, data){
+						console.log('User left this board: '+ data.name +" ("+ data.fid +")");
+						console.log(self.model);
 						// remove the user from the collecten, 
 						// the view event will remove the user from the screen
 						self.model.remove(
-							data.sid 
+							data.fid 
 						);
 						
 					});

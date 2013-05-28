@@ -22,7 +22,6 @@ module.exports = function(app, models, modules) {
 			title: req.body.title,
 			text: req.body.text,
 			author: {
-				sid: req.session._sessionid,	
 				fid: req.session.user.id,
 				name: req.session.user.name,
 				img: req.session.user.picture.data.url,

@@ -58,7 +58,7 @@ module.exports = function(app, models, modules) {
 						name: elm.name,
 						img: elm.img,
 						//updated: elm.updated,
-						id: elm.id,
+						id: elm.fid,
 						location: elm.location
 					};
 				})
