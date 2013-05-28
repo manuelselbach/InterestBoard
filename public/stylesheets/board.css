@@ -45,6 +45,9 @@ code {
 #notices #notice {
   display: none;
 }
+#modalhint #notice {
+  display: none;
+}
 .modal h1 {
   color: #fff;
   margin-top: -2px;

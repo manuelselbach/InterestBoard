@@ -1,5 +1,5 @@
-define(['models/Post', 'text!templates/PostItem.html'],
-	function(Post, PostItemTemplate) {
+define(['models/Post', 'text!templates/PostItem.html', 'text!globaltemplates/alert.html'],
+	function(Post, PostItemTemplate, AlertTemplate) {
 
 		/**
 		 * The PostItem is a single post that will be placed in the center screen
@@ -41,6 +41,15 @@ define(['models/Post', 'text!templates/PostItem.html'],
 		    // remove the item from the screen
 			remove: function remove() {
 				$(this.el).remove();
+				
+				$('#notices .container').html(
+					_.template(
+	        			AlertTemplate, 
+	        			{headline: 'Removed',
+	        			content: 'The post is removed.'}
+		        	)
+				);
+				$('#notices .container #notice').addClass('alert-success').fadeIn(300).delay(5000).fadeOut(600);	
 			},
 
 			// on selection
@@ -65,10 +74,14 @@ define(['models/Post', 'text!templates/PostItem.html'],
 								contentType: 'application/json',
 								dataType: 'text',
 								error: function( xhr, status, err){
-									alert("An error occured: "+ status +", "+ err);
-								},
-								succsess: function( data, status, xhr ){
-									alert("OK");
+									$('#notices .container').html(
+										_.template(
+		        							AlertTemplate, 
+						        			{headline: 'Failed',
+	        								content: 'The post could not removed.'+ err}
+		        						)
+									);
+									$('#notices .container #notice').addClass('alert-error').fadeIn(300);
 								},
 								type: 'DELETE',
 							
@@ -87,6 +100,7 @@ define(['models/Post', 'text!templates/PostItem.html'],
 		    // animate the chathead on moseover
 		    hoverOutItem: function hoverOutItem() {
 		    	this.$el.find('div.inner').fadeOut(300);
+		    	this.$el.find('#removepost').unbind();
 		    }
 		    
 		    
