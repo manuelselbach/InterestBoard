@@ -12,5 +12,8 @@
 # Backbone-Templates
 /public/templates/*
 
+# Log
+/logs/*
+*.log
 
 

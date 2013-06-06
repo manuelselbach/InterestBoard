@@ -19,6 +19,7 @@ var connect = require('connect')
   , events 		= require('events')
   , mongoose 	= require('mongoose')
   ,	i18n 		= require("i18n")
+  , Log 		= require('log')
   ;
 
 // Set the global configuration
@@ -30,68 +31,84 @@ var	apiconf = require('./configure');
  */  
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
+/**
+ * Set the logger.
+ */
+if(! apiconf.log.level || apiconf.log.level == ""){
+	apiconf.log.level = "info";
+}
+// Alwasy log everything in debug mode.
+if ('development' == process.env.NODE_ENV) {
+	apiconf.log.level = "debug"; 
+}
+if(! apiconf.log.file || apiconf.log.file == ""){
+	apiconf.log.file = "application.log";
+}
+var log = new Log(''+ apiconf.log.level , fs.createWriteStream(''+ apiconf.log.file));
+
 // enable debug mode in development mode
 if ('development' == process.env.NODE_ENV) {
+	// turn on debug mode on everyauth and mongoose
 	everyauth.debug = true;
 	mongoose.set('debug', true);
+	
+	// log even to stdout
+	log.on('line', function(line){
+		console.log(line);
+	});
 }
 
 // MONGO CONNECT
 // After all Mongoose handels the models.
-var conn = mongoose.createConnection("mongodb://localhost/InterestBoard", 
-	{
-		server: { poolSize: 4 }
-	});
+var conn = mongoose.createConnection("mongodb://localhost/InterestBoard", {
+	server: { poolSize: 4 }
+});
 
 conn.on('error', function () {
-  console.log('Error! Database connection failed.');
+  log.error('Error! Database connection failed.');
 });	
 
 conn.once('open', function () {
-	if ('development' == app.get('env')) console.log("Opening MongoDB and GridFS");
+	if ('development' == process.env.NODE_ENV) log.info("Opening MongoDB and GridFS");
 	var gfs = gridfs(conn.db, mongoose.mongo);
 	app.gridfs = gfs;
 });
 
-	// Users 
-	var usersById = {};
-	var usersByFbId = {};
-	var usersByLogin = {};
-	var nextUserId = 0;
-
-	function addUser (source, sourceUser) {
-		var user;
-		if (arguments.length === 1) { // password-based
-			user = sourceUser = source;
-			user.id = ++nextUserId;
-			return usersById[nextUserId] = user;
-		} else { // non-password-based
-			user = usersById[++nextUserId] = {id: nextUserId};
-			user[source] = sourceUser;
-		}
-		return user;
+// Users 
+var usersById = {};
+var usersByFbId = {};
+var usersByLogin = {};
+var nextUserId = 0;
+function addUser (source, sourceUser) {
+	var user;
+	if (arguments.length === 1) { // password-based
+		user = sourceUser = source;
+		user.id = ++nextUserId;
+		return usersById[nextUserId] = user;
+	} else { // non-password-based
+		user = usersById[++nextUserId] = {id: nextUserId};
+		user[source] = sourceUser;
 	}
+	return user;
+}
 
-	
+everyauth.everymodule
+	.findUserById( function (id, callback) {
+	callback(null, usersById[id]);
+});
 
-	everyauth.everymodule
-		.findUserById( function (id, callback) {
-		callback(null, usersById[id]);
-	});
-
-	everyauth
-		.facebook
-		.appId(apiconf.fb.appId)
-		.appSecret(apiconf.fb.appSecret)
-		.findOrCreateUser( function (session, accessToken, accessTokenExtra, fbUserMetadata) {
-		console.log("This user has loged id:");
-		console.log(fbUserMetadata);
-			return usersByFbId[fbUserMetadata.id] ||
-				(usersByFbId[fbUserMetadata.id] = addUser('facebook', fbUserMetadata));
-		})
-		.redirectPath('/')
-		.fields('id, name, email, picture, link, username, about, hometown, location, bio, quotes, gender')
-		;
+everyauth
+	.facebook
+	.appId(apiconf.fb.appId)
+	.appSecret(apiconf.fb.appSecret)
+	.findOrCreateUser( function (session, accessToken, accessTokenExtra, fbUserMetadata) {
+	log.info("Facebook user %s with id %s logged in.", fbUserMetadata.name, fbUserMetadata.id);
+	return usersByFbId[fbUserMetadata.id] ||
+			(usersByFbId[fbUserMetadata.id] = addUser('facebook', fbUserMetadata));
+	})
+	.redirectPath('/')
+	.fields('id, name, email, picture, link, username, about, hometown, location, bio, quotes, gender')
+	;
 
 everyauth
   .password
@@ -129,8 +146,7 @@ everyauth
 					} 
 				} 
 			};
-			console.log("A DUMMY USER WILL BE LOGED IN");
-			console.log(user);
+			log.info("A dummy user is logged in.");
 			return usersByLogin[user.id] ||
 				(usersById[user.id] = addUser('passport', user));
       	} else {
@@ -176,19 +192,18 @@ i18n.configure({
 var app = express();
 app.server      = http.createServer(app);
 
+// register global
 app.i18n = i18n;
-
+app.log = log;
 // register a global eventemitter
 app.eventEmitter = new events.EventEmitter();
-
 // registrer the database connection 
 app.dbconnection = conn;
-
 // set locales
 apiconf.setLocales(app);
-
 app.configure = apiconf;
 
+// Everyauth Helper. 
 everyauth.helpExpress(app);
 
 // Stylus compiler
@@ -247,7 +262,7 @@ if (fs.existsSync("app_modules")) {
 	fs.readdirSync('app_modules').forEach(function(file) {
 	  if ( file[0] == '.' ) return;
 	  var moduleName = file.substr(0, file.indexOf('.'));
-	  console.log("Add module: "+ moduleName );
+	  log.info("Add module %s to application.", moduleName );
 	  modules[moduleName] = require('./app_modules/' + moduleName)(app, models);
 	}); 
 }
@@ -256,14 +271,12 @@ if (fs.existsSync("app_modules")) {
 fs.readdirSync('routes').forEach(function(file) {
   if ( file[0] == '.' ) return;
   var routeName = file.substr(0, file.indexOf('.'));
-  console.log("Add route: "+ routeName );
+  log.info("Add route %s to application.", routeName );
   require('./routes/' + routeName)(app, models, modules);
 });
 
 // Server 
-//http.createServer(app).listen(app.get('port'), function(){
-//  console.log('Express server listening on port ' + app.get('port'));
-//});
+
 app.server.listen(app.get('port'), function(){
-	if ('development' == app.get('env')) console.log('Server listening on port ' + app.get('port'));
+	if ('development' == app.get('env')) log.notice('Server listening on port %d', app.get('port'));
 });
