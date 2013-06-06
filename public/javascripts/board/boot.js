@@ -11,6 +11,7 @@ require.config({
   	SingletonAbstract:	'/javascripts/Singleton',
     Socket: 			'/socket.io/socket.io',
     SocketImpl:			'/javascripts/SocketImpl',
+    UserImpl:			'/javascripts/UserImpl',
     models: 			'/javascripts/board/models',
     views:				'/javascripts/board/views',
     text: 				'/components/requirejs-text/text',
@@ -31,7 +32,8 @@ require.config({
     'Backbone':			['Underscore'],
     'Posts':			['Backbone', 'BackboneSchema'],
     'SingletonAbstract':['JQuery'],
-    'SocketImpl':		['SingletonAbstract', 'Socket']
+    'SocketImpl':		['SingletonAbstract', 'Socket'],
+    'UserImpl':			['SingletonAbstract']
   }
 });
 

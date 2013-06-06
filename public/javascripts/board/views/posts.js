@@ -1,5 +1,5 @@
-define(	['SocketImpl', 'models/PostList', 'models/Post', 'views/postItem'],
-	function(SocketImpl, PostList, Post, PostItemView) {
+define(	['SocketImpl', 'UserImpl', 'models/PostList', 'models/Post', 'views/postItem'],
+	function(SocketImpl, UserImpl, PostList, Post, PostItemView) {
 
 		/**
 		 * The roaster is the frame where the current online users will be palced.
@@ -43,11 +43,21 @@ define(	['SocketImpl', 'models/PostList', 'models/Post', 'views/postItem'],
 						self.model.remove(
 							self.model.findWhere({'_id': data})
 						);
+						// if the element is added right before, it is not handeld my the 
+						// rendering and must me removed by hand
+						$('#'+ data ).fadeOut();
+						$('#'+ data ).remove();
 					});
 					
 					soc.socket.on('pinnwall::insertPost', function(data){
 						console.log('New Post arrived to the board:');
+						console.log(data);
+						data._id = data.id;
 						var post = new Post(data);
+						if(data.author.fid == self.userid){
+							console.log("Set isRemovable true");
+							post.isRemovable = true;
+						}
 						// add the post to the collecten, 
 						// the view event will add the post to the screen
 						var view = new PostItemView({
@@ -58,14 +68,14 @@ define(	['SocketImpl', 'models/PostList', 'models/Post', 'views/postItem'],
 
 					});
 					
-					soc.socket.emit('my::id', function(data){
-						console.log("my id: "+ data);	
-						self.userid = data;
-						self.model.each(function(post, i) {
-							if(post.attributes.author.fid == self.userid){
-								post.isRemovable = true;
-							}
-						});
+					
+					user = new UserImpl();
+					console.log("my id: "+ user.userid);	
+					self.userid = user.userid;
+					self.model.each(function(post, i) {
+						if(post.attributes.author.fid == self.userid){
+							post.isRemovable = true;
+						}
 					});
 
 				});

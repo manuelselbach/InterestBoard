@@ -46,7 +46,7 @@ module.exports = function(app, models, modules) {
 					console.log(err);
 					res.send(500);
 				}
-				models.Board.addPost(board, post, function(err){
+				models.Board.addPost(board, post, function(err, post){
 					if(err){
 						console.log("There is a problem inserting the post.");
 						console.log(post);
@@ -55,6 +55,7 @@ module.exports = function(app, models, modules) {
 						res.send(500);
 						return;
 					}
+					console.log("Post should be saved. EMIT EVENT!");
 					app.eventEmitter.emit('post::inserted', board, post)
 				});			
 			});

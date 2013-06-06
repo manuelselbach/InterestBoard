@@ -28,13 +28,14 @@ define(['models/Post', 'text!templates/PostItem.html', 'text!globaltemplates/ale
     		// default render function to display the roaster 
 		    render: function render() {
 		    	console.log("render views/postItem");
-				 var that = this;
-				 this.$el.html(
+				var that = this;
+				this.$el.html(
 		        	_.template(
 		        		PostItemTemplate, that.model
 		        	)
 		        );	
-		        
+		        // set the element id:
+		        this.$el.attr({'id': this.model.get('_id') });
 		        return this;		        	
 		    },
 		    

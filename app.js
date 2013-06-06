@@ -55,6 +55,8 @@ conn.once('open', function () {
 
 	// Users 
 	var usersById = {};
+	var usersByFbId = {};
+	var usersByLogin = {};
 	var nextUserId = 0;
 
 	function addUser (source, sourceUser) {
@@ -70,7 +72,7 @@ conn.once('open', function () {
 		return user;
 	}
 
-	var usersByFbId = {};
+	
 
 	everyauth.everymodule
 		.findUserById( function (id, callback) {
@@ -82,6 +84,8 @@ conn.once('open', function () {
 		.appId(apiconf.fb.appId)
 		.appSecret(apiconf.fb.appSecret)
 		.findOrCreateUser( function (session, accessToken, accessTokenExtra, fbUserMetadata) {
+		console.log("This user has loged id:");
+		console.log(fbUserMetadata);
 			return usersByFbId[fbUserMetadata.id] ||
 				(usersByFbId[fbUserMetadata.id] = addUser('facebook', fbUserMetadata));
 		})
@@ -89,6 +93,75 @@ conn.once('open', function () {
 		.fields('id, name, email, picture, link, username, about, hometown, location, bio, quotes, gender')
 		;
 
+everyauth
+  .password
+    .loginWith('email')
+    .getLoginPath('/login')
+    .postLoginPath('/login')
+    .loginView('login.jade')
+    .loginLocals({
+      title: 'Login'
+    })
+    .loginLocals(function (req, res) {
+      return {
+        title: 'Login'
+      }
+    })
+    .authenticate( function (login, password) {
+      var errors = [];
+      if (!login) errors.push('Missing login');
+      if (!password) errors.push('Missing password');
+      if (errors.length) return errors;
+      var user = usersByLogin[login];
+      if (!user){
+      	if('development' == app.get('env')){
+      		// testuser should allways pass.
+      		user = { id: '-1',
+				name: 'Local Testuser',
+				link: 'http://www.example.com',
+				username: 'local.testuser',
+				hometown: { id: '-1', name: '' },
+				gender: 'neutrum',
+				picture: { 
+					data: { 
+						url: 'http://noimage.com/image.jpg',
+						is_silhouette: true 
+					} 
+				} 
+			};
+			console.log("A DUMMY USER WILL BE LOGED IN");
+			console.log(user);
+			return usersByLogin[user.id] ||
+				(usersById[user.id] = addUser('passport', user));
+      	} else {
+	      	return ['Login failed'];
+      	}
+      } 
+      if (user.password !== password) return ['Login failed'];
+      return user;
+    })
+    .getRegisterPath('/register')
+    .postRegisterPath('/register')
+    .registerView('register.jade')
+    .registerLocals({
+      title: 'Register'
+    })
+    .registerLocals(function (req, res) {
+      return {
+        title: 'Sync Register'
+       }
+    })
+    .validateRegistration( function (newUserAttrs, errors) {
+      var login = newUserAttrs.login;
+      if (usersByLogin[login]) errors.push('Login already taken');
+      return errors;
+    })
+    .registerUser( function (newUserAttrs) {
+      var login = newUserAttrs[this.loginKey()];
+      return usersByLogin[login] = addUser(newUserAttrs);
+    })
+    .loginSuccessRedirect('/')
+    .registerSuccessRedirect('/');
 
 // Languages
 i18n.configure({
@@ -115,6 +188,8 @@ app.dbconnection = conn;
 apiconf.setLocales(app);
 
 app.configure = apiconf;
+
+everyauth.helpExpress(app);
 
 // Stylus compiler
 function compile(str, path) {

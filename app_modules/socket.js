@@ -86,26 +86,26 @@ module.exports = function(app, models) {
 			socket.on('disconnect', function(){
 				if ('development' == app.get('env')) console.log('SIO disconnect');
 				models.Board.removeUserFromBoard(session.board, user, function onRemoveUserDone(){
-				// Tell everyone that i am left!
-				var suser = user;
-				suser.sid = undefined;
-				sio.sockets.in(session.board).emit('roaster::removeUser', user.fid, suser);	
-	  		});
-				
+					// Tell everyone that i am left!
+					var suser = user;
+					suser.sid = undefined;
+					sio.sockets.in(session.board).emit('roaster::removeUser', user.fid, suser);	
+	  			});			
 			});
+			
+			
+			
 		});
 		
-		app.eventEmitter.once('post::removed', function(board, postid){
+		app.eventEmitter.on('post::removed', function(board, postid){
 			console.log("Send remove event to all registed users to remove a post "+ postid 
 			+" to boardmembers of "+ board.boardname);
-				
 			sio.sockets.in(board.boardname).emit('pinnwall::removePost', postid);
 		});
 		
-		app.eventEmitter.once('post::inserted', function(board, post){
+		app.eventEmitter.on('post::inserted', function(board, post){
 			console.log("Send event to all registed users to add a post "+ post._id 
 			+" to boardmembers of "+ board.boardname);
-				
 			sio.sockets.in(board.boardname).emit('pinnwall::insertPost', post);
 		});
 		

@@ -205,10 +205,10 @@ module.exports = function(app, mongoose) {
 			console.log("# Add post");
 			console.log(post);
 		}
-		board.posts.push(post);
+		var resultingPostNr = board.posts.push(post);
 		board.save(function onSave(err, board){
-			callback(err);
-			
+			savedPost = board.posts;
+			callback(err, savedPost[resultingPostNr -1]);			
 		});	
 	};
 	
