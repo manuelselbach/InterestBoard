@@ -20,16 +20,33 @@ require.config({
 	BackboneSchema:		'../components/backbone-schema/backbone-schema',
 	SingletonAbstract:	'../javascripts/Singleton',
 	SocketImpl:			'../javascripts/SocketImpl',
+	UserImpl:			'../javascripts/UserImpl',
 	Socket: 			'/socket.io/socket.io',
 	JQuery:				'../components/jquery/jquery',
 	QUnit:				'../components/qunit/qunit',
-	sinon:				'../components/sinon/lib/sinon',
+	Sinon:				'../components/sinon/lib/sinon',
+	SinonLib:				'../components/sinon/lib/sinon/',
 	QSinon:				'../components/sinon-qunit/pkg/sinon-qunit-1.0.0',
+	AllSinon:			'./dummy',
 	cases:				'./cases'
   },
   shim: {
     'ModalView': 		['Validation'],
-    'QSinon':			['QUnit', 'sinon'],
+    'QSinon':			['QUnit', 'Sinon'],
+    'AllSinon':			['JQuery', 'Sinon', 'SinonLib/stub', 'SinonLib/spy', 
+    					'SinonLib/util/fake_xml_http_request', 'SinonLib/assert',
+    					'SinonLib/call', 'SinonLib/collection', 'SinonLib/match',
+    					'SinonLib/mock', 'SinonLib/sandbox', 'SinonLib/util/event'],
+	'SinonLib/stub': 	['Sinon'],
+	'SinonLib/spy': 	['Sinon'],
+	'SinonLib/util/fake_xml_http_request': 	['Sinon'],
+	'SinonLib/assert': 	['Sinon'],
+	'SinonLib/call': 	['Sinon'],
+	'SinonLib/collection': 	['Sinon'],
+	'SinonLib/match': 	['Sinon'],
+	'SinonLib/mock': 	['Sinon'],
+	'SinonLib/sandbox': 	['Sinon'],	
+	'SinonLib/util/event': 	['Sinon'],	
     'models':			['Backbone'],
     'Backbone':			['Underscore'],
     'Posts':			['Backbone', 'BackboneSchema'],
@@ -38,9 +55,9 @@ require.config({
 });
 
 require(['JQuery', 'QUnit', 'cases/require',  'cases/postModelTest', 'cases/postListModelTest',
-	'cases/userModelTest', 'cases/singeltonTest', 'cases/socketImplTest'], 
+	'cases/userModelTest', 'cases/singeltonTest', 'cases/socketImplTest', 'cases/userImplTest'], 
 	function(jquery, qunit, Requiretest, PostModelTest, PostListModelTest,
-		UserModelTest, SingeltonTest, SocketImplTest) {
+		UserModelTest, SingeltonTest, SocketImplTest, UserImplTest) {
 
 		$(function() {
 			QUnit.config.autostart = false;
@@ -60,6 +77,7 @@ require(['JQuery', 'QUnit', 'cases/require',  'cases/postModelTest', 'cases/post
 			UserModelTest.run();
 			SingeltonTest.run();
 			SocketImplTest.run();
+			UserImplTest.run();
 			
 			console.log("Done.");	
 			QUnit.start();
