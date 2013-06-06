@@ -100,6 +100,7 @@ module.exports = function(app, mongoose) {
 	 * Find boards by regular expressen on its name, title or tagline
 	 */
 	var findByString = function(searchStr, callback) {
+		app.log.debug("# Board: find by String '%s'", searchStr);
 		var searchRegex = new RegExp(searchStr, 'i');
 		Board.find({
 			$or: [
@@ -114,6 +115,7 @@ module.exports = function(app, mongoose) {
 	 * Get a board by its id
 	 */
 	var findById = function(boardId, callback) {
+		app.log.debug("# Board: find by Id '%d'", boardId);
 		Board.findOne({_id:boardId}, function(err,doc) {
 			callback(doc);
 		});
@@ -123,6 +125,7 @@ module.exports = function(app, mongoose) {
 	 * Get a board by name
 	 */
 	var findByName = function(boardName, callback) {
+		app.log.debug("# Board: find by name '%s'", boardName);
 		Board.findOne({boardname:boardName}, function(err,doc) {
 			callback(doc);
 		});
@@ -132,7 +135,7 @@ module.exports = function(app, mongoose) {
 	 * Create a new board
 	 */
 	var create = function(bname, title, createCallback) {
-		if ('development' == app.get('env')) console.log('Create board ' + bname);
+		app.log.info("Create a new board called '%s'", bname);
 		var board = new Board({
 			boardname: ""+ bname,
 			title: title,
@@ -141,7 +144,6 @@ module.exports = function(app, mongoose) {
 			updated: new Date()
 		});
 		board.save(createCallback);
-		if ('development' == app.get('env')) console.log('Save command was sent');
 	};
 	
   	/**
@@ -153,7 +155,7 @@ module.exports = function(app, mongoose) {
   	 * to the callback callback(err); If teh update works fine, than err is undefined.
   	 */
 	var addUserToBoard = function(bname, user, callback){
-		if ('development' == app.get('env')) console.log('Add user to board '+ bname +', '+ user.name);
+		app.log.info("Add user '%s' to board '%s'", user.name, bname);
 		Board.find({ 'boardname': bname })
 		.where('currentusers.sid').equals(user.sid)
 		.select('boardname name currentusers')
@@ -174,7 +176,7 @@ module.exports = function(app, mongoose) {
 	 * If a user left the board, it should ungegisterd from the roaster.
 	 */
 	var removeUserFromBoard = function(bname, user, callback){
-		if ('development' == app.get('env')) console.log("Remove "+ bname +","+ user.sid );
+		app.log.info("Remove user '%s' from board '%s'", user.name, bname);
 		Board.update(
 			{ boardname: bname }, 
 			{ '$pull': { currentusers: { fid: user.fid } } }
@@ -188,7 +190,7 @@ module.exports = function(app, mongoose) {
 	 * Call this at application startup to clear the pending users
 	 */
 	var removeAllActiveUsersFromAllBoards = function(callback){
-		if ('development' == app.get('env')) console.log("Remove all users from all boards" );
+		app.log.debug("# Remove all users from all boards" );
 		Board.update(
 			{ } 
 			, {'currentusers': [] } //{ '$pull': { currentusers: {} } }
@@ -201,10 +203,8 @@ module.exports = function(app, mongoose) {
 	 * Add a new post object to the board by boardname
 	 */
 	var addPost = function(board, post, callback){
-		if ('development' == app.get('env')) {
-			console.log("# Add post");
-			console.log(post);
-		}
+		app.log.info("Add a new post with title '%s' to board '%s'.", post.title, board.name);
+		app.log.debug(post);
 		var resultingPostNr = board.posts.push(post);
 		board.save(function onSave(err, board){
 			savedPost = board.posts;
@@ -216,14 +216,10 @@ module.exports = function(app, mongoose) {
 	 * Add a new post object to the board
 	 */
 	var removePost = function(board, postid, callback){
-		if ('development' == app.get('env')) {
-			console.log("# Remove post");
-			console.log(board.title +", "+ postid);
-		}
+		app.log.info("Remove post with id '%d' from board '%s'", postid, board.title);
 		board.posts.pull(postid);
 		board.save(function onSave(err, board){
 			callback(err);
-			
 		});	
 	};
 	
@@ -231,6 +227,7 @@ module.exports = function(app, mongoose) {
 	 * Return the posts in opposite order
 	 */
 	var findSortedPostsByBoardName = function(boardname, callback){
+		app.log.debug("# Find sorted posts by board name '%s'", boardname);
 		Board.aggregate(
 			{ $match: { boardname: boardname }}
 			, { $project: { 
@@ -263,7 +260,6 @@ module.exports = function(app, mongoose) {
 						postresult.posts.push( thispost );
 					}
 				});
-
 				callback(postresult.posts);
 			});
 	};
