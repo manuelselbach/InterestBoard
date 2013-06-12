@@ -76,8 +76,15 @@ module.exports = function(app, mongoose) {
 			unique: true },
 		tagline:	{ type: String },
 		added:		{ 
-			type: Date, 
-			default: Date.now },
+			at: {
+				type: Date, 
+				default: Date.now },
+			},
+			by: {
+				fid:		{ type: Number },
+				name:		{ type: String },
+				img:		{ type: String }
+			},
 		updated:	{ 
 			type: Date, 
 			default: Date.now },
@@ -134,13 +141,20 @@ module.exports = function(app, mongoose) {
 	/**
 	 * Create a new board
 	 */
-	var create = function(bname, title, createCallback) {
+	var create = function(bname, title, user, createCallback) {
 		app.log.info("Create a new board called '%s'", bname);
 		var board = new Board({
 			boardname: ""+ bname,
 			title: title,
 			tagline: "",
-			added: new Date(),
+			added: {
+				at: new Date(),
+				by: { 
+					fid: user.id,
+					name: user.name,
+					img: user.picture.url
+				}
+			},
 			updated: new Date()
 		});
 		board.save(createCallback);

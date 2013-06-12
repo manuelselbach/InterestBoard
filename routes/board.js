@@ -13,12 +13,15 @@ module.exports = function(app, models, modules) {
 
 			req.session.board = boardname.s;
 			models.Board.findByName(boardname, function onSearchDone(board) {
-				if ( board == undefined) {
+				if ( board == undefined || board.posts.length == 0) {
       				// board does not exists. create it :-)
-      				models.Board.create(boardname, req.params.board, function onCreateDone(){
+      				models.Board.create(boardname, req.params.board, req.session.auth.facebook.user, function onCreateDone(err){
+      					if(err) app.log.error("While creating a new board %s %s", boardname, err);
 	  					res.render('board',
 	  						{
 	  							boardname 	: boardname,
+	  							creatorname	: req.session.auth.facebook.user.name,
+	  							creatorid	: req.session.auth.facebook.user.id,
 	  							title 		: req.params.board,
 	  							tagline		: '',
 	  							isNew 		: true
@@ -31,6 +34,8 @@ module.exports = function(app, models, modules) {
 	  						boardname 	: board.boardname,
 	  						title 		: board.title,
 	  						tagline		: board.tagline,
+	  						creatorname	: req.session.auth.facebook.user.name,
+	  						creatorid	: req.session.auth.facebook.user.id,
 	  						isNew 		: false
 						}
 					);
@@ -46,6 +51,30 @@ module.exports = function(app, models, modules) {
 	
 	});
 	
+	// GET BOARD INFO
+	app.get('/board/:board/info.json', function (req, res) {
+		var boardname = String(req.params.board).slugify();
+		models.Board.findByName(boardname, function onSearchDone(board) {
+			hia
+			console.log(board);
+			
+			res.send( 
+			// underscoring the unwanted elements out
+				_.map(board, function(elm){
+					return {
+						id: elm.id,
+						status: elm.status,
+						boardname: elm.boardname,
+						title: elm.title,
+						tagline: elm.tagline,
+						added: elm.added,
+						updated: elm.updated
+					};
+				})
+			);
+		});
+	});
+
 	// GET CURRENT USERS ON A BOARD
 	app.get('/board/:board/users.json', function (req, res) {
 		var boardname = String(req.params.board).slugify();

@@ -1,0 +1,25 @@
+{
+  "name": "accesslog",
+  "description": "A apache-like access log for nodejs.",
+  "version": "0.0.1",
+  "private": false,
+  "homepage": "https://github.com/petershaw/Apache-Like-AccessLog",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/petershaw/Apache-Like-AccessLog.git"
+  },
+  "author": "Peter Shaw <unthoughted@gmail.com> (https://github.com/petershaw/)",
+  "main": "index.js",
+  "keywords": [
+    "log",
+    "access",
+    "apache",
+    "NCSA Common Log Format",
+    "CLF"
+  ],
+  "dependencies": {
+    "microtime": "~0.4.0",
+    "sprintf": "~0.1.1",
+    "dateformat": "~1.2.3"
+  }
+}

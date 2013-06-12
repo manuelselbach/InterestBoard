@@ -20,6 +20,7 @@ var connect = require('connect')
   , mongoose 	= require('mongoose')
   ,	i18n 		= require("i18n")
   , Log 		= require('log')
+  , apachelog 	= require('./lib/accesslog');
   ;
 
 // Set the global configuration
@@ -249,6 +250,10 @@ app.use(stylus.middleware(
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(everyauth.middleware(app));
 app.use(i18n.init);
+
+// set logger into middleware
+app.use(apachelog.logger);
+
 app.use(app.router);
 
 // development only
@@ -261,9 +266,21 @@ var modules = {};
 if (fs.existsSync("app_modules")) {
 	fs.readdirSync('app_modules').forEach(function(file) {
 	  if ( file[0] == '.' ) return;
-	  var moduleName = file.substr(0, file.indexOf('.'));
-	  log.info("Add module %s to application.", moduleName );
-	  modules[moduleName] = require('./app_modules/' + moduleName)(app, models);
+	  fs.stat('./app_modules/'+ file, function stattingModule(err, stats){
+	  	var moduleName = file;
+		if(err){
+	  		log.error("Can not stat module '%s'", moduleName);
+		} else {
+			if(stats.isDirectory()){
+				log.info("Add libary %s to application.", moduleName );
+				modules[moduleName] = require('./app_modules/' + moduleName)(app, models);	
+			} else if(stats.isFile()){
+				moduleName = file.substr(0, file.indexOf('.'));
+		 		log.info("Add module %s to application.", moduleName );
+				modules[moduleName] = require('./app_modules/' + moduleName)(app, models);				
+			}
+		}
+	  });
 	}); 
 }
 
@@ -276,7 +293,6 @@ fs.readdirSync('routes').forEach(function(file) {
 });
 
 // Server 
-
 app.server.listen(app.get('port'), function(){
 	if ('development' == app.get('env')) log.notice('Server listening on port %d', app.get('port'));
 });

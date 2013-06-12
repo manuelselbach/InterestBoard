@@ -20,6 +20,7 @@ require.config({
     globaltemplates:	'/templates',
     Router:				'/javascripts/board/router',
 	Roaster: 			'/javascripts/board/Roaster',
+	Tagline: 			'/javascripts/board/Tagline',
 	Posts: 				'/javascripts/board/Posts',
 	Underscore:			'/components/underscore/underscore-min',
 	Backbone:			'/components/backbone/backbone-min',
@@ -37,8 +38,8 @@ require.config({
   }
 });
 
-require(['Roaster', 'Posts'], 
-	function(Roaster, Posts) {
+require(['Roaster', 'Tagline', 'Posts'], 
+	function(Roaster, Tagline, Posts) {
 	
 		/** 
 		 * Well, to keep the Roaster and the Post as seperade as possible it must implement
@@ -48,6 +49,9 @@ require(['Roaster', 'Posts'],
 		
 		// initialize the roaster.
 		Roaster.initialize();
+		
+		// initialize the tagline.
+		Tagline.initialize();
 		
 		// then, initialize the Posts.
 		Posts.initialize();

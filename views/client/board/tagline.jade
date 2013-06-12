@@ -1,0 +1,7 @@
+// The tagline of a board
+
+p TaglineTemplate
+	| <%= get('tagline')
+	span.pull-right.quote
+		| ~ <%= get('created.by.name') %> ~
+

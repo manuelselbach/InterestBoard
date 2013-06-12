@@ -4,7 +4,19 @@ block header
 	h1 #{title}
 	
 block lead
-	| #{tagline}
+	#tagline
+	- if (isNew)
+		form#postsublineeditor
+			textarea #{__('You are the first who enters this board - formtext')}
+			span.pull-left
+				submit.btn.btn-success save
+			span.pull-right.quote
+				| ~ #{everyauth.facebook.user.name} ~
+
+	- else
+		p #{tagline}
+		span.pull-right.quote
+			| ~ #{everyauth.facebook.user.name} ~
 
 block content
 	#posts
