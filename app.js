@@ -20,7 +20,7 @@ var connect = require('connect')
   , mongoose 	= require('mongoose')
   ,	i18n 		= require("i18n")
   , Log 		= require('log')
-  , apachelog 	= require('./lib/accesslog');
+  , apachelog 	= require('apache-like-accesslog');
   ;
 
 // Set the global configuration
