@@ -49,8 +49,15 @@ describe("This Active-User test", function(){
 				done();
 			});
 		}
-
-		models.Board.create("test", "Test", fn);
+		var testuser = {
+			sid: 'aaaaaaaa',
+			fid: 'bbbbbbbb', 
+			name: "Eduard der Ältere",
+			picture: {
+				url: ''
+			}
+		};
+		models.Board.create("test", "Test", testuser, fn);
 	});
 	
 	it('should add a user to the boards', function(done){
@@ -66,7 +73,10 @@ describe("This Active-User test", function(){
 		var testuser = {
 			sid: 'aaaaaaaa',
 			fid: 'bbbbbbbb', 
-			name: "Eduard der Ältere"
+			name: "Eduard der Ältere",
+			picture: {
+				url: ''
+			}
 		};
 		models.Board.addUserToBoard("test", testuser, fn);
 	});

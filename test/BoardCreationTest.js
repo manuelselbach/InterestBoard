@@ -6,6 +6,15 @@ var assert 		= require("assert")
 var assert = chai.assert;	
 var models = {};
 
+var testuser = {
+			sid: 'aaaaaaaa',
+			fid: 'bbbbbbbb', 
+			name: "Eduard der Ältere",
+			picture: {
+				url: ''
+			}
+		};
+
 describe('Test the Board model creation process', function(){
 describe('run', function(){
 	before(function(){
@@ -49,7 +58,7 @@ describe('run', function(){
 			});
 		}
 
-		models.Board.create("testboard", "A Test Board", fn);
+		models.Board.create("testboard", "A Test Board", testuser, fn);
     });
 	it('should creates another board', function(done){
 		var fn = function(err, data){
@@ -61,7 +70,7 @@ describe('run', function(){
 			});
 		}
 
-		models.Board.create("secondtestboard", "A Second Board", fn);
+		models.Board.create("secondtestboard", "A Second Board", testuser, fn);
     });
  	it('should reject the same board', function(done){
  		var fn = function(err, data){
@@ -71,8 +80,8 @@ describe('run', function(){
  				done();
  			});
  		}
- 
- 		models.Board.create("secondtestboard", "A Second Board", fn);
+		 
+ 		models.Board.create("secondtestboard", "A Second Board", testuser, fn);
      });
 });
 });

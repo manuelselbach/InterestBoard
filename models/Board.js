@@ -132,7 +132,36 @@ module.exports = function(app, mongoose) {
 	 * Get a board by name
 	 */
 	var findByName = function(boardName, callback) {
-		app.log.debug("# Board: find by name '%s'", boardName);
+		app.log.debug("# Board: find by name '%s'", boardName);	
+		Board.aggregate(
+			{ $match: { boardname: boardName }}
+			, { $project: { 
+				'_id': 1,
+				'status': 1,
+				'boardname': 1,
+				'title': 1,
+				'tagline': 1,
+				'added': 1,
+				'updated': 1
+			}}
+			, function (err, result) {
+				if(err) app.log.error("Can not get board by name '%s', because: %s", boardname, err);
+				var doc;
+				if(result && result.length > 0){
+					doc = result[0];
+				}
+				if(result && result.length > 1){
+					app.log.error("More than one board is using the name '%s'", boardname);
+				}
+				callback(doc);
+		});
+	};
+
+	/**
+	 * Get a board and its posts by name
+	 */
+	var findByNameWithPosts = function(boardName, callback) {
+		app.log.debug("# Board: find by name with posts '%s'", boardName);
 		Board.findOne({boardname:boardName}, function(err,doc) {
 			callback(doc);
 		});
@@ -221,7 +250,7 @@ module.exports = function(app, mongoose) {
 		app.log.debug(post);
 		var resultingPostNr = board.posts.push(post);
 		board.save(function onSave(err, board){
-			savedPost = board.posts;
+			var savedPost = board.posts;
 			callback(err, savedPost[resultingPostNr -1]);			
 		});	
 	};
@@ -282,6 +311,7 @@ module.exports = function(app, mongoose) {
 		findById: findById,
 		findByString: findByString,
 		findByName: findByName,
+		findByNameWithPosts: findByNameWithPosts,	
     	create: create,
 	    addUserToBoard: addUserToBoard,
 	    addPost: addPost,

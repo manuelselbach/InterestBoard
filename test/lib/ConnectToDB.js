@@ -3,8 +3,12 @@ for (var key in require.cache) {delete require.cache[key];}
 	
 var mongoose 	= require('mongoose')
 	, gridfs 	= require('gridfs-stream')
+	, Log 		= require('log')
+	, fs 		= require('fs')
 	;
-	
+
+var log = new Log('debug', fs.createWriteStream('test.log'));
+
 // set the application environment to test! Always Test! 
 var app = { 
 	env: 'test',
@@ -12,7 +16,8 @@ var app = {
 		if(key == 'env'){
 			return "test";
 		}
-	}
+	},
+	log: log
 };
 	
 // initialise the model object
