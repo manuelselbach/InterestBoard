@@ -3,3 +3,5 @@ node_modules
 logs
 public/components
 node_modules/.bin/_mocha
+
+test.log

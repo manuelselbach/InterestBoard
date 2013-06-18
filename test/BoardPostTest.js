@@ -6,9 +6,18 @@ var assert 		= require("assert")
 	
 var assert = chai.assert;	
 var models = {};
-  
+
+var testuser = {
+			sid: 'aaaaaaaa',
+			fid: 'bbbbbbbb', 
+			name: "Eduard der Ältere",
+			picture: {
+				url: ''
+			}
+		};
+
 describe('Test posts', function(){
-describe("create and delete post", function(){
+describe("create and delete posts", function(){
 	before(function(){
 		db.connect();
 		models = db.getModels();
@@ -42,7 +51,7 @@ describe("create and delete post", function(){
 			});
 		}
 
-		models.Board.create("testpostboard", "Test Post", fn);
+		models.Board.create("testpostboard", "Test Post", testuser, fn);
 	});
 	
 	it('should add a post to the boards', function(done){
@@ -68,7 +77,7 @@ describe("create and delete post", function(){
 			},
 			rendered:   true
 		};
-		models.Board.findByName("testpostboard", function(board){
+		models.Board.findByNameWithPosts("testpostboard", function(board){
 			models.Board.addPost(board, post, fn);
 		});
 	});
@@ -98,7 +107,7 @@ describe("create and delete post", function(){
 			},
 			rendered:   true
 		};
-		models.Board.findByName("testpostboard", function(board){
+		models.Board.findByNameWithPosts("testpostboard", function(board){
 			models.Board.addPost(board, post, fn);
 		});
 	});
@@ -124,7 +133,7 @@ describe("create and delete post", function(){
 		}
 
 		// remove the post
-		models.Board.findByName("testpostboard", function(board){
+		models.Board.findByNameWithPosts("testpostboard", function(board){
 			models.Board.removePost(board, board.posts[1].id, fn);
 		});
 	});

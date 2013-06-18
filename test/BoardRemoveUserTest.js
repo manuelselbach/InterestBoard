@@ -7,6 +7,16 @@ var assert 		= require("assert")
 var assert = chai.assert;	
 var models = {};
   
+
+var testuser = {
+			sid: 'aaaaaaaa',
+			fid: 11111111111, 
+			name: "Eduard der Ältere",
+			picture: {
+				url: ''
+			}
+		};
+		
 describe('Test removing users from the board', function(){
 	describe("The current active user test ", function(){
 	
@@ -22,7 +32,7 @@ describe('Test removing users from the board', function(){
 				});
 			}
 
-			models.Board.create("testactiveuser", "Test", fn);
+			models.Board.create("testactiveuser", "Test", testuser, fn);
 
 		});
 
@@ -67,7 +77,7 @@ describe('Test removing users from the board', function(){
 			}
 			var testuser = {
 				sid: 'cccccccc',
-				fid: 'dddddddd', 
+				fid: 123456789, 
 				name: "Richard I"
 			};
 			models.Board.addUserToBoard("testactiveuser", testuser, fn);
@@ -87,7 +97,7 @@ describe('Test removing users from the board', function(){
 				});
 			}
 			var testuser = {
-				sid: 'cccccccc'
+				fid: 123456789
 			}
 			models.Board.removeUserFromBoard("testactiveuser", testuser, fn)
 		});
