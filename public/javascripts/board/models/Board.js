@@ -11,7 +11,7 @@ define(['Backbone', 'BackboneSchema'], function(backbone, backboneschema, requir
 			, boardname: { type: String  }
 			, title: { type: String }
 			, tagline: { type: String }
-			, added: {
+			, created: {
 				at: { type: Date },
 				by: {
 					fid:		{ type: Number },

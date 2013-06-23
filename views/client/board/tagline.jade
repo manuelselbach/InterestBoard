@@ -1,7 +1,10 @@
 // The tagline of a board
 
-p TaglineTemplate
-	| <%= get('tagline')
+p <%= isEditable %>, <%= showForm %>
+	-if(showForm == true)
+		| show form
+	-else
+		| <%= get('tagline') %>
 	span.pull-right.quote
 		| ~ <%= get('created.by.name') %> ~
 

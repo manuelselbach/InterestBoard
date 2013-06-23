@@ -13,9 +13,9 @@ module.exports = function(app, models, modules) {
 
 			req.session.board = boardname.s;
 			models.Board.findByName(boardname.s, function onSearchDone(board) {
-				if ( board == undefined || board.postssize == 0) {
+				if ( board == undefined) {
       				// board does not exists. create it :-)
-      				models.Board.create(boardname, req.params.board, req.session.auth.facebook.user, function onCreateDone(err){
+      				models.Board.create(boardname, req.params.board, req.session.auth.facebook.user, function onCreateDone(err, board){
       					if(err) app.log.error("While creating a new board %s %s", boardname.s, err);
 	  					res.render('board',
 	  						{

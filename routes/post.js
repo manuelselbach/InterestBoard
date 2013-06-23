@@ -39,7 +39,7 @@ module.exports = function(app, models, modules) {
 		};
 
 		// Call rendering engine, than insert the post
-		models.Board.findByName(boardname, function renderAndInsert(board){			
+		models.Board.findByNameWithPosts(boardname, function renderAndInsert(board){			
 			app.eventEmitter.emit('post::shouldRender', post, function insertPost(err, post){
 				if(err){
 					console.log("There is a problem with the render function.")
