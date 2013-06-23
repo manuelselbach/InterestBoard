@@ -13,14 +13,45 @@ var testuser = {
 				url: ''
 			}
 		};
-		
+
+var firsttestpost =  {
+	url:		'http://www.interestboard.de',
+	title:		'InterestBoard',
+	img:		'test.jpg',
+	text:		'this post is just a test',
+	author:		testuser,
+	added:		Date.now,
+	rendered:   true
+	};
+	
+var secondtestpost =  {
+	url:		'http://www.google.de',
+	title:		'Google',
+	img:		'google.jpg',
+	text:		'this post is just a second test',
+	author:		testuser,
+	added:		Date.now,
+	rendered:   true
+	};
+
 describe('Test the Board find by name process', function(){
 describe('run', function(){
 	before(function(done){
 		db.connect();
 		models = db.getModels();
 		models.Board.create("testboard", "A Test Board", testuser, function beforeCB(err, data){
-			done();
+			models.Board.addPost(data, firsttestpost, function(err, post){
+				if(err) console.log("ERROR: "+ err);
+				
+				models.Board.addPost(data, secondtestpost, function(err, post){
+					if(err) console.log("ERROR: "+ err);
+					
+					done();
+				});
+			
+			});
+			
+//			done();
 		} );
 	});
 

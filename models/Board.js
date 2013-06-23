@@ -1,3 +1,5 @@
+var _ = require('underscore');
+
 module.exports = function(app, mongoose) {
 
 	var schemaOptions = {
@@ -129,23 +131,27 @@ module.exports = function(app, mongoose) {
 	};
 
 	/**
-	 * Get a board by name
+	 * Get a board by name and aggegated the posts into a post count.
 	 */
 	var findByName = function(boardName, callback) {
 		app.log.debug("# Board: find by name '%s'", boardName);	
 		Board.aggregate(
 			{ $match: { boardname: boardName }}
-			, { $project: { 
-				'_id': 1,
-				'status': 1,
-				'boardname': 1,
-				'title': 1,
-				'tagline': 1,
-				'added': 1,
-				'updated': 1
+			,{ $unwind : "$posts" }
+			,{ $group : {
+				_id : { 
+					_id: "$_id",
+					status: "$status",
+					boardname: '$boardname',
+					title: "$title",
+					tagline: "$tagline",
+					added: "$added",
+					updated: "$updated"
+				},
+				postsize : { $sum : 1 }
 			}}
 			, function (err, result) {
-				if(err) app.log.error("Can not get board by name '%s', because: %s", boardname, err);
+				if(err) app.log.error("Can not get board by name '%s', because: %s", boardName, err);
 				var doc;
 				if(result && result.length > 0){
 					doc = result[0];
@@ -153,7 +159,12 @@ module.exports = function(app, mongoose) {
 				if(result && result.length > 1){
 					app.log.error("More than one board is using the name '%s'", boardname);
 				}
-				callback(doc);
+				// doc.postsize = {postsize: doc.postsize};
+				//var resDoc = _.flatten(doc, true);
+				doc._id.postsize = doc.postsize;
+				var resDoc = _.flatten(doc, true);
+				resDoc = doc._id;
+				callback(resDoc);
 		});
 	};
 

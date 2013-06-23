@@ -12,14 +12,14 @@ module.exports = function(app, models, modules) {
 			if ('development' == app.get('env')) console.log("Rendering board '"+ boardname +"'.");
 
 			req.session.board = boardname.s;
-			models.Board.findByName(boardname, function onSearchDone(board) {
-				if ( board == undefined || board.posts.length == 0) {
+			models.Board.findByName(boardname.s, function onSearchDone(board) {
+				if ( board == undefined || board.postssize == 0) {
       				// board does not exists. create it :-)
       				models.Board.create(boardname, req.params.board, req.session.auth.facebook.user, function onCreateDone(err){
-      					if(err) app.log.error("While creating a new board %s %s", boardname, err);
+      					if(err) app.log.error("While creating a new board %s %s", boardname.s, err);
 	  					res.render('board',
 	  						{
-	  							boardname 	: boardname,
+	  							boardname 	: boardname.s,
 	  							creatorname	: req.session.auth.facebook.user.name,
 	  							creatorid	: req.session.auth.facebook.user.id,
 	  							title 		: req.params.board,
@@ -54,23 +54,12 @@ module.exports = function(app, models, modules) {
 	// GET BOARD INFO
 	app.get('/board/:board/info.json', function (req, res) {
 		var boardname = String(req.params.board).slugify();
-		models.Board.findByName(boardname, function onSearchDone(board) {
-			hia
+		models.Board.findByName(boardname.s, function onSearchDone(board) {
+			console.log("++ "+ boardname.s);
 			console.log(board);
 			
 			res.send( 
-			// underscoring the unwanted elements out
-				_.map(board, function(elm){
-					return {
-						id: elm.id,
-						status: elm.status,
-						boardname: elm.boardname,
-						title: elm.title,
-						tagline: elm.tagline,
-						added: elm.added,
-						updated: elm.updated
-					};
-				})
+				board
 			);
 		});
 	});
@@ -78,7 +67,7 @@ module.exports = function(app, models, modules) {
 	// GET CURRENT USERS ON A BOARD
 	app.get('/board/:board/users.json', function (req, res) {
 		var boardname = String(req.params.board).slugify();
-		models.Board.findByName(boardname, function onSearchDone(board) {
+		models.Board.findByName(boardname.s, function onSearchDone(board) {
 			res.send( 
 			// underscoring the unwanted elements out
 				_.map(board.currentusers, function(elm){
