@@ -132,6 +132,7 @@ module.exports = function(app, mongoose) {
 
 	/**
 	 * Get a board by name and aggegated the posts into a post count.
+	 * It's also returned the currentusers list.
 	 */
 	var findByName = function(boardName, callback) {
 		app.log.debug("# Board: find by name '%s'", boardName);	
@@ -146,7 +147,8 @@ module.exports = function(app, mongoose) {
 					title: "$title",
 					tagline: "$tagline",
 					added: "$added",
-					updated: "$updated"
+					updated: "$updated",
+					currentusers: "$currentusers"
 				},
 				postsize : { $sum : 1 }
 			}}
@@ -161,6 +163,10 @@ module.exports = function(app, mongoose) {
 				}
 				// doc.postsize = {postsize: doc.postsize};
 				//var resDoc = _.flatten(doc, true);
+				if(!doc){
+					callback();
+					return;
+				}
 				doc._id.postsize = doc.postsize;
 				var resDoc = _.flatten(doc, true);
 				resDoc = doc._id;

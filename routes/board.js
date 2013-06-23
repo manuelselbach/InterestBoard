@@ -68,19 +68,23 @@ module.exports = function(app, models, modules) {
 	app.get('/board/:board/users.json', function (req, res) {
 		var boardname = String(req.params.board).slugify();
 		models.Board.findByName(boardname.s, function onSearchDone(board) {
-			res.send( 
-			// underscoring the unwanted elements out
-				_.map(board.currentusers, function(elm){
-					return {
-						fid: elm.fid,
-						name: elm.name,
-						img: elm.img,
-						//updated: elm.updated,
-						id: elm.fid,
-						location: elm.location
-					};
-				})
-			);
+			if(board && board.currentusers){
+				res.send( 
+				// underscoring the unwanted elements out		
+					_.map(board.currentusers, function(elm){
+						return {
+							fid: elm.fid,
+							name: elm.name,
+							img: elm.img,
+							//updated: elm.updated,
+							id: elm.fid,
+							location: elm.location
+						};
+					})
+				);
+			} else {
+				res.end("", 200);	
+			}
 		});
 	});
 	
