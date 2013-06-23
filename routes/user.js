@@ -7,7 +7,6 @@ module.exports = function(app, models, modules) {
 			req.session.loggedIn 	= true;
 			req.session.accountId 	= req.session.auth.facebook.user.id;
 			req.session.user 		= req.session.auth.facebook.user;
-			console.log(req.session.auth.facebook.user);
 			res.send(200);
 	    } else {
       		if ('development' == app.get('env')) {

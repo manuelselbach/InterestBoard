@@ -11,11 +11,6 @@ module.exports = function(app, models) {
 	sio.configure(function() {
 
 		sio.set('authorization', function( data, accept) {
-			if ('development' == app.get('env')){
-				console.log('SIO authorization');
-				console.log( data );
-			}
-
 			var signedCookies = cookie.parse(data.headers.cookie);
 			var cookies = utils.parseSignedCookies(signedCookies,app.sessionSecret);
 			data.sessionID = cookies['express.sid'];

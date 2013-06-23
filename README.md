@@ -75,6 +75,10 @@ Social-Networks should be open! Everybody has to see what's going on and how the
 
 Releasing the source code is not a problem at all. The goal is to enforce the critical mass of users on a portal, not the genius craftsmanship of the engineers work. Many people can code. And these people are for hiring. So , The code is not the challenge, it's the ecosystem.
 
+Testing
+------------------
+run <pre><code>npm test</code></pre> to test the current source.
+
 Licence 
 ------------------
 If you found this tool helpful please use it. It's free and you can do whatever you want. You can - if you want - remove the comments and names. You can reverse it upside down or print it out and let your dog chew on it. Do whatever you like - i do not care. But please, one last thing: please commit your fixes, that i can get your optimisation back to my build chain. Keep your (maybe commercial features, but share bug fixes an performance improvements with me)
