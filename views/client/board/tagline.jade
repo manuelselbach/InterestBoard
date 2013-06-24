@@ -1,10 +1,15 @@
 // The tagline of a board
 
-p <%= isEditable %>, <%= showForm %>
-	-if(showForm == true)
-		| show form
-	-else
-		| <%= get('tagline') %>
+p
+	| <% if ( get('showForm') == true ){ %>
+	form(name="tagline")
+		textarea.span12
+			| <%= get('tagline') %>
+	span.pull-right
+		a#savetagline(class="btn") save
+	| <% } else { %>
+	| <%= get('tagline') %>
 	span.pull-right.quote
-		| ~ <%= get('created.by.name') %> ~
-
+		| ~ <%= get('created').by.name %> ~
+	| <% } %>
+	

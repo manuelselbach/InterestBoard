@@ -17,16 +17,31 @@ define(	['SocketImpl', 'UserImpl', 'models/Board', 'text!templates/tagline.html'
 			model: new BoardModel,
 				
 			events: {
-
+				'click #savetagline': 'savetagline'
 			},
     
 			// Initialize the roaster and connect the roaster to the Socket.
 			initialize: function initialize() {
 				var that = this;
-				console.log("Fetschiung");
+				that.model.set('isEditable', false);
+				that.model.set('showForm', false);
+				
+				user = new UserImpl();
+				that.userid = user.userid;
+					
 				that.model.fetch(
 					{success: function(){
-					console.log("succ");
+						if( that.model.get('status') == undefined 
+							|| (that.model.get('status') == 'new'
+						 	&& that.model.get('created').by.fid == that.userid
+							)){
+							that.model.set('showForm', true);
+							that.model.set('isEditable', true);
+						} else {
+							if(that.model.get('created').by.fid == that.userid){
+								that.model.set('isEditable', true);
+							}
+						}
 						that.render();
 					}}
 				).complete(function(){
@@ -36,24 +51,14 @@ define(	['SocketImpl', 'UserImpl', 'models/Board', 'text!templates/tagline.html'
 						console.log('tagline change: '+ data);
 					});
 					
-					user = new UserImpl();
-					that.userid = user.userid;
-					
-					if( that.model.get('status') == undefined 
-						|| that.model.get('status') == 'new'){
-						that.model.set('showForm', true);
-					} else {
-						if(that.model.get('created').by.fid == self.userid){
-							that.model.set('isEditable', true);
-						}
-					}
+
 				});
 
 			},
 			
 			render: function render(){
 				that = this;
-				console.log("Rendering tagline.");
+				//_.templateSettings.variable = "rc";
 				that.$el.html(
 		        	_.template(
 		        		TaglineTemplate,
@@ -61,6 +66,10 @@ define(	['SocketImpl', 'UserImpl', 'models/Board', 'text!templates/tagline.html'
 		        	)
 		        );
 			},
+			
+			savetagline: function savetagline(){
+				alert("SAVE THE TAGLINE");
+			}
 			
 		});
 		
