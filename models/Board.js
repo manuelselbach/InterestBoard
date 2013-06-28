@@ -60,7 +60,7 @@ module.exports = function(app, mongoose) {
 		img:		{ type: String },
 		text:		{ type: String },
 		author:		UserDefinition,
-		added:		{ 
+		created:		{ 
 			type: Date, 
 			default: Date.now },
 		rendered:   { type: Boolean },
@@ -77,16 +77,17 @@ module.exports = function(app, mongoose) {
 			trim: true, 
 			unique: true },
 		tagline:	{ type: String },
-		added:		{ 
-			at: {
-				type: Date, 
-				default: Date.now },
-			},
+		created:		{ 
 			by: {
 				fid:		{ type: Number },
 				name:		{ type: String },
 				img:		{ type: String }
 			},
+			at: {
+				type: Date, 
+				default: Date.now 
+			}
+		},
 		updated:	{ 
 			type: Date, 
 			default: Date.now },
@@ -132,6 +133,7 @@ module.exports = function(app, mongoose) {
 
 	/**
 	 * Get a board by name and aggegated the posts into a post count.
+	 * It's also returned the currentusers list.
 	 */
 	var findByName = function(boardName, callback) {
 		app.log.debug("# Board: find by name '%s'", boardName);	
@@ -145,8 +147,9 @@ module.exports = function(app, mongoose) {
 					boardname: '$boardname',
 					title: "$title",
 					tagline: "$tagline",
-					added: "$added",
-					updated: "$updated"
+					created: "$created",
+					updated: "$updated",
+					currentusers: "$currentusers"
 				},
 				postsize : { $sum : 1 }
 			}}
@@ -159,8 +162,28 @@ module.exports = function(app, mongoose) {
 				if(result && result.length > 1){
 					app.log.error("More than one board is using the name '%s'", boardname);
 				}
-				// doc.postsize = {postsize: doc.postsize};
-				//var resDoc = _.flatten(doc, true);
+				if(!doc){
+					// if board is new it does not have any posts...
+					Board.aggregate(
+						{ $match: { boardname: boardName }}
+						, { $project: { 
+							_id: "$_id",
+							status: "$status",
+							boardname: '$boardname',
+							title: "$title",
+							tagline: "$tagline",
+							created: "$created",
+							updated: "$updated",
+							currentusers: "$currentusers"
+						}}
+						, function(err,doc) {
+							if(doc.length > 0) doc = doc[0];
+							doc.postsize = 0;
+							callback(doc);
+						}
+					);
+					return;
+				}
 				doc._id.postsize = doc.postsize;
 				var resDoc = _.flatten(doc, true);
 				resDoc = doc._id;
@@ -182,20 +205,21 @@ module.exports = function(app, mongoose) {
 	 * Create a new board
 	 */
 	var create = function(bname, title, user, createCallback) {
-		app.log.info("Create a new board called '%s'", bname);
+		app.log.info("User "+ user.name +" creates a new board called '%s'", bname);
 		var board = new Board({
 			boardname: ""+ bname,
 			title: title,
 			tagline: "",
-			added: {
-				at: new Date(),
-				by: { 
+			created: {
+				'by': { 
 					fid: user.id,
 					name: user.name,
 					img: user.picture.url
-				}
+				},
+				'at': new Date()
 			},
-			updated: new Date()
+			updated: new Date(),
+			status: "new"
 		});
 		board.save(createCallback);
 	};
@@ -292,10 +316,10 @@ module.exports = function(app, mongoose) {
 				'posts.img': 1,
 				'posts.text': 1,
 				'posts.author': 1,
-				'posts.added': 1,
+				'posts.created': 1,
 				'posts.rendered': 1
 			}}, { $unwind : "$posts" }
-			, { $sort : { "posts.added": -1 } }
+			, { $sort : { "posts.created": -1 } }
 			, function (err, result) {
 				if (err) console.log("ERROR:"+ err);
 				var postresult = {};

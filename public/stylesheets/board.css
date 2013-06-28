@@ -167,12 +167,12 @@ code {
 #posts .post div.inner div.postcontrol i {
   margin-right: 5px;
 }
-form#postsublineeditor textarea {
+#tagline form textarea {
   width: 99%;
   height: 160px;
   display: block;
 }
-form#postsublineeditor .quote {
+#tagline form .quote {
   font-family: 'Euphoria Script', cursive;
   font-size: 22px;
 }

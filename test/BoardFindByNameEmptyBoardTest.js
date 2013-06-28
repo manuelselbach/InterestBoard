@@ -14,44 +14,13 @@ var testuser = {
 			}
 		};
 
-var firsttestpost =  {
-	url:		'http://www.interestboard.de',
-	title:		'InterestBoard',
-	img:		'test.jpg',
-	text:		'this post is just a test',
-	author:		testuser,
-	created:	Date.now,
-	rendered:   true
-	};
-	
-var secondtestpost =  {
-	url:		'http://www.google.de',
-	title:		'Google',
-	img:		'google.jpg',
-	text:		'this post is just a second test',
-	author:		testuser,
-	created:	Date.now,
-	rendered:   true
-	};
-
-describe('Test the Board find by name process', function(){
+describe('Test the Board find by name process but without posts inside the board', function(){
 describe('run', function(){
 	before(function(done){
 		db.connect();
 		models = db.getModels();
-		models.Board.create("testboard", "A Test Board", testuser, function beforeCB(err, data){
-			models.Board.addPost(data, firsttestpost, function(err, post){
-				if(err) console.log("ERROR: "+ err);
-				
-				models.Board.addPost(data, secondtestpost, function(err, post){
-					if(err) console.log("ERROR: "+ err);
-					
-					done();
-				});
-			
-			});
-			
-//			done();
+		models.Board.create("testboard", "A Test Board", testuser, function beforeCB(err, data){	
+			done();
 		} );
 	});
 
@@ -77,7 +46,6 @@ describe('run', function(){
 	it('should get the board by name with posts', function(done){
 		models.Board.findByNameWithPosts('testboard', function findWithNameCB(board) {
 			assert.ok(board != undefined);
-			assert.ok(board.posts != undefined);
  			assert.ok(board.boardname.length > 0);
 			done();
 		});
@@ -85,7 +53,6 @@ describe('run', function(){
 	it('should get the board by name', function(done){
 		models.Board.findByName('testboard', function findCB(board) {
 			assert.ok(board != undefined);
-			assert.ok(board.posts == undefined);
 			assert.ok(board.boardname.length > 0);
 			done();
 		});
