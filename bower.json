@@ -16,7 +16,7 @@
     "backbone": ">=1.0.0",
     "backbone-validation": ">=0.7.1",
     "backbone-jsmodalview": "*",
-	"backbone-schema": "git://github.com/petershaw/backbone-schema.git",
+    "backbone-schema": "git://github.com/petershaw/backbone-schema.git",
     "bootstrap-stylus": "*",
     "underscore": "*",
     "requirejs": "2.1.5",

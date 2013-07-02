@@ -5,21 +5,21 @@
  * A collaborative realtime board.
  */
 
-var connect = require('connect')
-  ,	express 	= require('express')
+var connect 		= require('connect')
+  ,	express 		= require('express')
   , MongoStore 	= require('express-session-mongo')
-  , gridfs 		= require('gridfs-stream')
+  , gridfs 			= require('gridfs-stream')
   , everyauth 	= require('everyauth-express3')
-  ,	io 			= require('socket.io')
-  , http 		= require('http')
-  , path 		= require('path')
-  , stylus 		= require('stylus')
-  , nib 		= require('nib')
-  , fs 			= require('fs')
-  , events 		= require('events')
-  , mongoose 	= require('mongoose')
-  ,	i18n 		= require("i18n")
-  , Log 		= require('log')
+  ,	io 					= require('socket.io')
+  , http 				= require('http')
+  , path 				= require('path')
+  , stylus 			= require('stylus')
+  , nib 				= require('nib')
+  , fs 					= require('fs')
+  , events 			= require('events')
+  , mongoose 		= require('mongoose')
+  ,	i18n 				= require("i18n")
+  , Log 				= require('log')
   , apachelog 	= require('apache-like-accesslog');
   ;
 
@@ -191,7 +191,7 @@ i18n.configure({
 
 // Create an http server
 var app = express();
-app.server      = http.createServer(app);
+app.server = http.createServer(app);
 
 // register global
 app.i18n = i18n;
