@@ -46,7 +46,7 @@ define(['QUnit', 'UserImpl', 'AllSinon'], function(qunit, UserImpl, Sinon){
 			
 			//console.log("***");
 
-			// These functions should have been added by your code, we can just call them:
+			// These functions should have been created by your code, we can just call them:
 			//dummySocket.onopen();
 			//dummySocket.onmessage(JSON.stringify({ hello : 'from server' }));
 			//console.log(dummySocket);

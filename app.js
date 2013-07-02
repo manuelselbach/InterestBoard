@@ -204,9 +204,6 @@ app.dbconnection = conn;
 apiconf.setLocales(app);
 app.configure = apiconf;
 
-// Everyauth Helper. 
-everyauth.helpExpress(app);
-
 // Stylus compiler
 function compile(str, path) {
   return stylus(str)

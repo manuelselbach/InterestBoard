@@ -4,47 +4,61 @@ define(	['SocketImpl', 'UserImpl', 'models/Board', 'text!templates/tagline.html'
 		/**
 		 * The roaster is the frame where the current online users will be palced.
 		 */
-		var Lagline = Backbone.View.extend({
+		var Tagline = Backbone.View.extend({
 			
 			userid: 0,
+			
+			isEditable: false,
+			
+			showForm: false,
 			
 			el: $('#tagline'),
 			
 			model: new BoardModel,
 				
 			events: {
-
+				'click #savetagline': 'savetagline'
 			},
     
 			// Initialize the roaster and connect the roaster to the Socket.
 			initialize: function initialize() {
 				var that = this;
-				that.model.fetch();
-				/**
+				that.model.set('isEditable', false);
+				that.model.set('showForm', false);
+				
+				user = new UserImpl();
+				that.userid = user.userid;
+					
+				that.model.fetch(
 					{success: function(){
-						self.render();
+						if( that.model.get('status') == undefined 
+							|| (that.model.get('status') == 'new'
+						 	&& that.model.get('created').by.fid == that.userid
+							)){
+							that.model.set('showForm', true);
+							that.model.set('isEditable', true);
+						} else {
+							if(that.model.get('created').by.fid == that.userid){
+								that.model.set('isEditable', true);
+							}
+						}
+						that.render();
 					}}
 				).complete(function(){
-					
 					soc = new SocketImpl();
-				
 					// new post arrive
 					soc.socket.on('tagline::changed', function(data){
 						console.log('tagline change: '+ data);
 					});
 					
-					user = new UserImpl();
-					console.log("my id: "+ user.userid);	
-					self.userid = user.userid;
-					if(board.created.by.fid == self.userid){
-						post.isEditable = true;
-					}
+
 				});
-				*/
+
 			},
 			
 			render: function render(){
 				that = this;
+				//_.templateSettings.variable = "rc";
 				that.$el.html(
 		        	_.template(
 		        		TaglineTemplate,
@@ -53,8 +67,12 @@ define(	['SocketImpl', 'UserImpl', 'models/Board', 'text!templates/tagline.html'
 		        );
 			},
 			
+			savetagline: function savetagline(){
+				alert("SAVE THE TAGLINE");
+			}
+			
 		});
 		
-		return Lagline;
+		return Tagline;
 	}
 );
